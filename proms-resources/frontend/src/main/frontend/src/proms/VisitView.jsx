@@ -52,9 +52,8 @@ function VisitView(props) {
 
   const classes = useStyles(color)();
 
-  let generateFilters = () => {
-    let result = [];
-    result.surveys = {
+  let filters = {
+    surveys : {
       comparator: "=",
       name: "surveys",
       title: visitInfo?.surveys?.["text"],
@@ -62,8 +61,8 @@ function VisitView(props) {
       uuid: visitInfo?.surveys?.["jcr:uuid"],
       value: surveysId,
       hidden: true
-    };
-    result.date = {
+    },
+    date : {
       comparator: "=",
       name: "time",
       title: visitInfo?.time?.["text"],
@@ -72,9 +71,8 @@ function VisitView(props) {
       dateFormat: "yyyy-MM-dd",
       value: '__DATE_FILTER_PLACEHOLDER__',
       hidden: true
-    };
-    return result;
-  }
+    }
+  };
 
   let columns = [
     {
@@ -119,8 +117,8 @@ function VisitView(props) {
       title="Appointments"
       columns={columns}
       query={`/Forms.paginate?fieldname=questionnaire&fieldvalue=${encodeURIComponent(visitInfo?.["jcr:uuid"])}&orderBy=${visitInfo?.time?.["jcr:uuid"]}`}
-      filters={generateFilters()}
-      questionnaireId={visitInfo?.["@path"]}
+      filters={filters}
+      questionnairePath={visitInfo?.["@path"]}
     />
   );
 }
