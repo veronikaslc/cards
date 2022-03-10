@@ -26,9 +26,9 @@
     <version>0.9-SNAPSHOT</version>
   </parent>
 
-  <artifactId>proms-backend</artifactId>
+  <artifactId>proms-permissions</artifactId>
   <packaging>bundle</packaging>
-  <name>Proms Resources - Backend code</name>
+  <name>Proms Resources - Custom permissions</name>
 
   <build>
     <plugins>
@@ -37,46 +37,14 @@
         <groupId>org.apache.felix</groupId>
         <artifactId>maven-bundle-plugin</artifactId>
         <extensions>true</extensions>
-        <configuration>
-          <instructions>
-            <Sling-Initial-Content>SLING-INF/content/apps/cards/proms/clinics/Cardio/mailTemplates;path:=/apps/cards/proms/clinics/Cardio/mailTemplates;overwrite:=true</Sling-Initial-Content>
-          </instructions>
-        </configuration>
       </plugin>
     </plugins>
   </build>
 
   <dependencies>
     <dependency>
-      <groupId>commons-validator</groupId>
-      <artifactId>commons-validator</artifactId>
-      <version>1.7</version>
-    </dependency>
-    <dependency>
-      <groupId>jakarta.mail</groupId>
-      <artifactId>jakarta.mail-api</artifactId>
-      <version>2.0.1</version>
-    </dependency>
-    <dependency>
       <groupId>org.apache.sling</groupId>
       <artifactId>org.apache.sling.api</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.sling</groupId>
-      <artifactId>org.apache.sling.commons.messaging.mail</artifactId>
-      <version>2.0.0</version>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.sling</groupId>
-      <artifactId>org.apache.sling.commons.scheduler</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.osgi</groupId>
-      <artifactId>org.osgi.service.component</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>javax.json</groupId>
-      <artifactId>javax.json-api</artifactId>
     </dependency>
     <dependency>
       <groupId>org.osgi</groupId>
@@ -85,6 +53,10 @@
     <dependency>
       <groupId>javax.jcr</groupId>
       <artifactId>jcr</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.jackrabbit</groupId>
+      <artifactId>oak-api</artifactId>
     </dependency>
     <dependency>
       <groupId>org.apache.jackrabbit</groupId>
@@ -99,36 +71,14 @@
       <artifactId>commons-lang3</artifactId>
     </dependency>
     <dependency>
-      <groupId>javax.servlet</groupId>
-      <artifactId>javax.servlet-api</artifactId>
-    </dependency>
-    <dependency>
       <groupId>io.uhndata.cards</groupId>
       <artifactId>cards-dataentry</artifactId>
       <version>${project.version}</version>
     </dependency>
     <dependency>
       <groupId>io.uhndata.cards</groupId>
-      <artifactId>cards-utils</artifactId>
+      <artifactId>cards-permissions</artifactId>
       <version>${project.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>io.uhndata.cards</groupId>
-      <artifactId>cards-token-authentication</artifactId>
-      <version>${project.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>io.uhndata.cards</groupId>
-      <artifactId>cards-email-notifications</artifactId>
-      <version>${project.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.sling</groupId>
-      <artifactId>org.apache.sling.servlets.annotations</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.osgi</groupId>
-      <artifactId>org.osgi.service.metatype.annotations</artifactId>
     </dependency>
   </dependencies>
 </project>
