@@ -31,7 +31,7 @@
     },
     {
       "id":"${project.groupId}:proms-permissions:${project.version}",
-      "start-order":"1"
+      "start-order":"15"
     },
     {
       "id":"${project.groupId}:proms-frontend:${project.version}",

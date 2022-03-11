@@ -21,7 +21,7 @@
   "bundles":[
     {
       "id":"io.uhndata.cards:cards-permissions-trusted:${cards.version}",
-      "start-order":"1"
+      "start-order":"15"
     }
   ],
   "configurations":{

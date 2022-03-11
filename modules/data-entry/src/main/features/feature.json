@@ -27,7 +27,7 @@
     },
     {
       "id":"io.uhndata.cards:cards-permissions:${cards.version}",
-      "start-order":"1"
+      "start-order":"15"
     },
     {
       "id":"org.apache.commons:commons-compress:1.18",
