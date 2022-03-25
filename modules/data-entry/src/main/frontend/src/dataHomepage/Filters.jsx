@@ -154,7 +154,7 @@ function Filters(props) {
       newFilterableFields = ["Questionnaire", "Subject", "CreatedDate"];
       newFilterableUUIDs = {Questionnaire: "cards:Questionnaire", Subject: "cards:Subject", CreatedDate: "cards:CreatedDate"};
       newFilterableTitles = {Questionnaire: "Questionnaire", Subject: "Subject", CreatedDate: "Created Date"};
-      newQuestionDefinitions = {Questionnaire: {dataType: "questionnaire"}, Subject: {dataType: "subject"}, CreatedDate: "createddate"};
+      newQuestionDefinitions = {Questionnaire: {dataType: "questionnaire"}, Subject: {dataType: "subject"}, CreatedDate: {dataType: "createddate"}};
     }
 
     // We'll need a helper recursive function to copy over data from sections/questions
