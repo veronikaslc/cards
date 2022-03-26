@@ -352,7 +352,11 @@ function Filters(props) {
         {...toCheck, comparator: (toCheck.comparator == "=" ? "is empty" : "is not empty")}));
     newFilters = addCreatedDateTimezone(newFilters);
     setActiveFilters(newFilters);
-    onChangeFilters && onChangeFilters(newFilters.concat(defaultFilters));
+    // we need to concat defaultFilters that might be pre-set elsewhere
+    // but we also need to avoid duplicates
+    let newFilterNames = newFilters.map(item => item.name);
+    let filteredDefaults = defaultFilters.filter(item => !newFilterNames.includes(item.name));
+    onChangeFilters && onChangeFilters(newFilters.concat(filteredDefaults));
     setDialogOpen(false);
   }
 
