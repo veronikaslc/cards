@@ -355,7 +355,7 @@ function Filters(props) {
     // we need to concat defaultFilters that might be pre-set elsewhere
     // but we also need to avoid duplicates
     let newFilterNames = newFilters.map(item => item.name);
-    let filteredDefaults = defaultFilters.filter(item => !newFilterNames.includes(item.name));
+    let filteredDefaults = defaultHiddenFilters.filter(item => !newFilterNames.includes(item.name));
     onChangeFilters && onChangeFilters(newFilters.concat(filteredDefaults));
     setDialogOpen(false);
   }
