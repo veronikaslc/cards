@@ -475,7 +475,8 @@ public class PaginationServlet extends SlingSafeMethodsServlet
         filters.forEach((type, values) -> mapFiltersToSources(nodeType, type, values, questionnairesToFormSource,
             questionnairesToQuestions, session));
 
-        long explicitQuestionnaireFilterCount = filters.getOrDefault(FilterType.CHILD, Collections.emptyList())
+        List<Filter> filterList = filters.getOrDefault(FilterType.CHILD, new ArrayList<Filter>());
+        long explicitQuestionnaireFilterCount = filterList
                 .stream()
                 .filter(filter -> QUESTIONNAIRE_IDENTIFIER.equals(filter.name))
                 .map(filter -> filter.value).distinct().count();
@@ -500,7 +501,8 @@ public class PaginationServlet extends SlingSafeMethodsServlet
                 if (!ENTITY_SELECTOR.equals(source)) {
                     Filter qFilter = new Filter(QUESTIONNAIRE_IDENTIFIER, questionnaire, "text", "=");
                     qFilter.source = source;
-                    filters.get(FilterType.CHILD).add(qFilter);
+                    filterList.add(qFilter);
+                    filters.put(FilterType.CHILD, filterList);
                 }
             }
         }
