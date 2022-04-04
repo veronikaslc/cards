@@ -68,7 +68,7 @@ public class FilterServlet extends SlingSafeMethodsServlet
 
     private static final String DEEP_JSON_SUFFIX = ".deep.json";
 
-    private static final String CONFIGURATION_NODE = "/apps/cards/config/CopyAnswers";
+    private static final String CONFIGURATION_NODE = "/apps/cards/config/CopyAnswers/Questionnaires/";
 
     private final ThreadLocal<Node> answersToCopy = ThreadLocal.withInitial(() -> null);
 
