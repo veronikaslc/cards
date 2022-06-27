@@ -78,6 +78,11 @@
         "io.uhndata.cards.dataentry:computedAnswers=[sling-readall]",
         "io.uhndata.cards.dataentry:maxFormsOfTypePerSubjectValidator=[sling-readall]"
       ]
+    },
+    "org.apache.sling.serviceusermapping.impl.ServiceUserMapperImpl.amended~referenceAnswers":{
+      "user.mapping":[
+        "io.uhndata.cards.dataentry:referenceAnswers=[sling-readall]"
+      ]
     }
   }
 }
