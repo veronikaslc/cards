@@ -34,6 +34,8 @@ import { makeStyles } from 'tss-react/mui';
 import { grey } from '@mui/material/colors';
 
 import { GRID_SPACE_UNIT } from "./QuestionnaireStyle";
+import { useMediaQuery } from "@mui/material";
+import { useTheme } from '@mui/material/styles';
 
 const useStyles = makeStyles()(theme => ({
     resourceHeader: {
@@ -109,7 +111,9 @@ function ResourceHeader (props) {
     contentOffset = 0
   } = props;
 
-  const { classes } = useStyles();
+  const { classes } = useStyles();;
+  const theme = useTheme();
+  const appbarExpanded = useMediaQuery(theme.breakpoints.up('md'));
 
   // Scroll trigger for collapsing the Title and action into the breadcrumbs
   const fullBreadcrumbTrigger = useScrollTrigger({
@@ -120,7 +124,7 @@ function ResourceHeader (props) {
 
   return (
     <>
-    <Grid size={12} className={classes.resourceHeader} style={{top: contentOffset}} id="cards-resource-header">
+    <Grid size={12} className={classes.resourceHeader} style={{ top: appbarExpanded ? props.contentOffset: 0 }} id="cards-resource-header">
       <Grid container justifyContent="space-between" alignItems="center" wrap="nowrap">
         <Grid>
           <Breadcrumbs separator={separator}>

@@ -27,6 +27,7 @@ import PatientIdentification from "./PatientIdentification.jsx";
 import Footer from "./Footer.jsx";
 import { CacheProvider } from "@emotion/react";
 import createCache from "@emotion/cache";
+import PageStartWrapper from '../PageStartWrapper';
 
 import { DEFAULT_INSTRUCTIONS, SURVEY_INSTRUCTIONS_PATH } from "./SurveyInstructionsConfiguration.jsx"
 
@@ -78,17 +79,21 @@ function PatientPortalHomepage (props) {
 
   if (!subject) {
     return (<>
-      <PatientIdentification onSuccess={onPatientIdentified} displayText={displayText} config={accessConfig}/>
-      <Footer />
+      <PageStartWrapper extensionsName="SurveyPageStart">
+        <PatientIdentification onSuccess={onPatientIdentified} displayText={displayText} config={accessConfig}/>
+        <Footer />
+      </PageStartWrapper>
     </>);
   }
 
   return (<>
-    <QuestionnaireSet subject={subject} username={username} displayText={displayText} config={{
-      ...accessConfig,
-      ...surveyInstructions
-    }} />
-    <Footer />
+    <PageStartWrapper extensionsName="SurveyPageStart">
+      <QuestionnaireSet subject={subject} username={username} displayText={displayText} config={{
+        ...accessConfig,
+        ...surveyInstructions
+      }} />
+      <Footer />
+    </PageStartWrapper>
   </>);
 }
 
