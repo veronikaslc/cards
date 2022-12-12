@@ -55,6 +55,8 @@ then
   featureFlagString="$featureFlagString -f mvn:io.uhndata.cards/${PROJECT_NAME}/${PROJECT_VERSION}/slingosgifeature"
 fi
 
+[[ "${PROJECT_NAME}" == 'cards4prems' ]] && EPIC_INTEGRATION_ENABLED="true"
+
 if [ ! -z $DEV ]
 then
   featureFlagString="$featureFlagString -f mvn:io.uhndata.cards/cards/${CARDS_VERSION}/slingosgifeature/composum"
@@ -175,6 +177,11 @@ then
   SMTPS_VARIABLES="$SMTPS_VARIABLES -V emailnotifications.smtps.checkserveridentity=false"
   SMTPS_VARIABLES="$SMTPS_VARIABLES -V emailnotifications.smtps.host=smtps_test_container"
   SMTPS_VARIABLES="$SMTPS_VARIABLES -V emailnotifications.smtps.port=465"
+fi
+
+if [[ "$EPIC_INTEGRATION_ENABLED" == "true" ]]
+then
+  featureFlagString="$featureFlagString -f mvn:io.uhndata.cards/cards-epic-integration/${PROJECT_VERSION}/slingosgifeature"
 fi
 
 #Load all the SSL certs under SSL_CONFIG/cards_certs into Java's trusted CA keystore
