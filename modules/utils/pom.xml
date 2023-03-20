@@ -131,19 +131,19 @@
     <dependency>
       <groupId>org.apache.sling</groupId>
       <artifactId>org.apache.sling.testing.sling-mock.core</artifactId>
-      <version>3.4.2</version>
+      <version>3.2.2</version>
       <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>org.apache.sling</groupId>
       <artifactId>org.apache.sling.jcr.resource</artifactId>
-      <version>3.0.18</version>
+      <version>3.2.0</version>
       <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>org.apache.sling</groupId>
       <artifactId>org.apache.sling.testing.sling-mock.junit4</artifactId>
-      <version>3.4.2</version>
+      <version>3.2.2</version>
       <scope>test</scope>
     </dependency>
     <dependency>
@@ -161,7 +161,6 @@
     <dependency>
       <groupId>com.google.guava</groupId>
       <artifactId>guava</artifactId>
-      <version>20.0</version>
       <scope>test</scope>
     </dependency>
     <dependency>
@@ -171,6 +170,12 @@
     <dependency>
       <groupId>org.mockito</groupId>
       <artifactId>mockito-core</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.assertj</groupId>
+      <artifactId>assertj-core</artifactId>
+      <version>3.24.2</version>
+      <scope>test</scope>
     </dependency>
   </dependencies>
 </project>
