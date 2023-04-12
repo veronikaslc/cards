@@ -31,7 +31,7 @@
   <description>Flags form answers as incomplete or invalid</description>
 
   <properties>
-    <coverage.instructionRatio>0.34</coverage.instructionRatio>
+    <coverage.instructionRatio>0.88</coverage.instructionRatio>
   </properties>
 
   <build>
