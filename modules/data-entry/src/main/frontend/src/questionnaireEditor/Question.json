@@ -372,6 +372,12 @@
                   "type": "textOptions",
                   "childrenType": "cards:AnswerOption"
                 }
+              },
+              "select" : {
+                "answerOptions" : {
+                  "type": "textOptions",
+                  "childrenType": "cards:AnswerOption"
+                }
               }
             }
           },
