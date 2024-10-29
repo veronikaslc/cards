@@ -55,7 +55,7 @@ def getQuestionnaireNames():
   return questionnaire_names
 
 def getQuestionnaireSchema(questionnaire_name):
-  r = requests.get(CARDS_URL + "/Questionnaires/" + urllib.parse.quote(questionnaire_name) + ".bare.deep.-identify.json", auth=HTTPBasicAuth("admin", ADMIN_PASSWORD))
+  r = requests.get(CARDS_URL + "/Questionnaires/" + urllib.parse.quote(questionnaire_name) + ".bare.deep.-identify.nolinks.json", auth=HTTPBasicAuth("admin", ADMIN_PASSWORD))
   if r.status_code != 200:
     raise Exception("Could not get questionnaire schema for {}".format(questionnaire_name))
   return r.json()
