@@ -240,8 +240,13 @@ public class ValidateCredentialsServlet extends SlingAllMethodsServlet
         throws IOException, RepositoryException
     {
         String presentedMRN = request.getParameter(MRN);
-        Boolean mrnProvided = presentedMRN != null && !"undefined".equals(presentedMRN) && !"".equals(presentedMRN);
-        String presentedID = mrnProvided ? presentedMRN : request.getParameter(HC);
+        boolean mrnProvided = presentedMRN != null && !"undefined".equals(presentedMRN) && !"".equals(presentedMRN);
+        String presentedHC = request.getParameter(HC);
+        boolean hcProvided = presentedHC != null && !"undefined".equals(presentedHC) && !"".equals(presentedHC);
+        if (!mrnProvided && !hcProvided) {
+            return null;
+        }
+        String presentedID = mrnProvided ? presentedMRN : presentedHC;
 
         Node patientQuestionnaire = getPatientInformationQuestionnaire(session);
         String identifierQuestion = this.questionnaireUtils.getQuestion(patientQuestionnaire,
