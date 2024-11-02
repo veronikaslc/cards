@@ -239,18 +239,16 @@ public class ValidateCredentialsServlet extends SlingAllMethodsServlet
         final ResourceResolver rr)
         throws IOException, RepositoryException
     {
-        String presentedMRN = request.getParameter(MRN);
-        boolean mrnProvided = presentedMRN != null && !"undefined".equals(presentedMRN) && !"".equals(presentedMRN);
-        String presentedHC = request.getParameter(HC);
-        boolean hcProvided = presentedHC != null && !"undefined".equals(presentedHC) && !"".equals(presentedHC);
-        if (!mrnProvided && !hcProvided) {
+        String presentedMRN = getParameterOrNull(request, MRN);
+        String presentedHC = getParameterOrNull(request, HC);
+        if (presentedMRN == null && presentedHC == null) {
             return null;
         }
-        String presentedID = mrnProvided ? presentedMRN : presentedHC;
+        String presentedID = presentedMRN != null ? presentedMRN : presentedHC;
 
         Node patientQuestionnaire = getPatientInformationQuestionnaire(session);
         String identifierQuestion = this.questionnaireUtils.getQuestion(patientQuestionnaire,
-            (mrnProvided ? MRN : HC)).getIdentifier();
+            (presentedMRN != null ? MRN : HC)).getIdentifier();
 
         // Find patients matching the provided ID
         final Iterator<Resource> results = rr.findResources(
@@ -271,6 +269,15 @@ public class ValidateCredentialsServlet extends SlingAllMethodsServlet
         }
 
         return null;
+    }
+
+    private String getParameterOrNull(final SlingHttpServletRequest request, final String name)
+    {
+        String result = request.getParameter(name);
+        if (result == null || "undefined".equals(result) || "".equals(result)) {
+            return null;
+        }
+        return result;
     }
 
     List<Node> getVisitForms(final SlingHttpServletRequest request, final Session session,
