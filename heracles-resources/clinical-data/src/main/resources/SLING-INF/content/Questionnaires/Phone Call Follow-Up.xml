@@ -2890,7 +2890,7 @@
 				</property>
 				<property>
 					<name>expression</name>
-					<value><![CDATA[return (@{[other_event_subtype?]}.some(e => ["cancer", "neuropathy"].includes(e)) ? 1 : 0)]]></value>
+					<value><![CDATA[return (@{[other_event_subtype?]}.some(function(e) {return ["cancer", "neuropathy"].includes(e)}) ? 1 : 0)]]></value>
 					<type>String</type>
 				</property>
 				<property>
@@ -6214,7 +6214,7 @@
 				<property>
 					<name>expression</name>
 					<value><![CDATA[let values = ["hospital", "emergency", "walkin", "familydoctor", "specialist"];
-return (@{[medical_care_type]}.some(e => values.includes(e)) ? 1 : 0)]]></value>
+return (@{[medical_care_type]}.some(function(e) {return values.includes(e)}) ? 1 : 0)]]></value>
 					<type>String</type>
 				</property>
 				<property>
