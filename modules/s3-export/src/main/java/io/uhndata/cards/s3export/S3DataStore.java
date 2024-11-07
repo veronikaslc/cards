@@ -80,7 +80,10 @@ public class S3DataStore implements DataStore
 
         try {
             final ObjectMetadata meta = new ObjectMetadata();
-            meta.setContentType(mimetype);
+            // Some s3 buckets may forbid uploading "applications", so let's pretend that they're just plain text files
+            meta.setContentType(
+                "true".equals(getNamedParameter(config.storageParameters(), "blockedApplicationMimeTypeWorkaround"))
+                    && mimetype.startsWith("application/") ? "text/plain" : mimetype);
             if (size >= 0) {
                 meta.setContentLength(size);
             }
