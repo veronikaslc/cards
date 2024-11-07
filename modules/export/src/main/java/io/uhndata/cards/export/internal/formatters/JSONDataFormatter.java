@@ -50,9 +50,11 @@ public class JSONDataFormatter implements DataFormatter
     {
         Resource r = resolver.resolve(what.getExportPath() + ".json");
         JsonObject serialization = r.adaptTo(JsonObject.class);
+        byte[] bytes = serialization.toString().getBytes(StandardCharsets.UTF_8);
 
         return new ResourceRepresentation(what,
-            new ByteArrayInputStream(serialization.toString().getBytes(StandardCharsets.UTF_8)),
+            new ByteArrayInputStream(bytes),
+            bytes.length,
             "application/json",
             getContentsSummary(what, config, resolver));
     }
