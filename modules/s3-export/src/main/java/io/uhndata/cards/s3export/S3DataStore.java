@@ -72,6 +72,7 @@ public class S3DataStore implements DataStore
             new EndpointConfiguration(s3EndpointUrl, s3EndpointRegion);
         final AWSCredentials credentials = new BasicAWSCredentials(awsKey, awsSecret);
         final AmazonS3 s3 = AmazonS3ClientBuilder.standard()
+            .withPayloadSigningEnabled(true)
             .withEndpointConfiguration(endpointConfig)
             .withPathStyleAccessEnabled(true)
             .withCredentials(new AWSStaticCredentialsProvider(credentials))
