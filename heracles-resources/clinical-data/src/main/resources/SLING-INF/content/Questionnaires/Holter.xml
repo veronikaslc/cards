@@ -956,7 +956,7 @@
 		</property>
 		<property>
 			<name>dataType</name>
-			<value>long</value>
+			<value>decimal</value>
 			<type>String</type>
 		</property>
 		<property>
