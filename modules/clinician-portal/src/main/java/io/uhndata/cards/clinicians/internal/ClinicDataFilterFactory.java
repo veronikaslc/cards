@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package io.uhndata.cards.patients.internal;
+package io.uhndata.cards.clinicians.internal;
 
 import java.util.List;
 import java.util.Set;
