@@ -138,18 +138,16 @@ public class UnsubmittedFormsCleanupTask implements Runnable
                 resources.forEachRemaining(form -> {
                     try {
                         resolver.delete(form);
+                        resolver.commit();
                     } catch (final PersistenceException e) {
                         LOGGER.warn("Failed to delete expired form {}: {}", form.getPath(), e.getMessage());
                     }
                 });
-                resolver.commit();
             }
         } catch (RepositoryException e) {
             LOGGER.warn("Failed to fetch forms: {}", e.getMessage());
         } catch (final LoginException e) {
             LOGGER.warn("Invalid setup, service rights not set up for the expired forms cleanup task");
-        } catch (final PersistenceException e) {
-            LOGGER.warn("Failed to delete expired forms: {}", e.getMessage());
         } finally {
             if (mustPopResolver) {
                 this.rrp.pop();
