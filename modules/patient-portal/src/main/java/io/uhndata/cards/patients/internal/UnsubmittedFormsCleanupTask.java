@@ -101,6 +101,8 @@ public class UnsubmittedFormsCleanupTask implements Runnable
                     delay = (int) clinicNode.getProperty("daysRelativeToEventWhileSurveyIsValid").getLong();
                 }
                 ZonedDateTime upperLimit = DateUtils.atMidnight(ZonedDateTime.now()).minusDays(delay);
+                // Since this runs nightly, it's OK to look for the results just from a few days before
+                ZonedDateTime lowerLimit = upperLimit.minusDays(7);
 
                 // Get all data forms for the specific clinic
                 final Iterator<Resource> resources = resolver.findResources(String.format(
@@ -121,6 +123,7 @@ public class UnsubmittedFormsCleanupTask implements Runnable
                         // the visit date is in the past
                         + "  and visitDate.question = '%3$s'"
                         + "  and visitDate.value < '%4$s'"
+                        + "  and visitDate.value >= '%5$s'"
                         // the form is not submitted
                         + "  and not dataForm.statusFlags = 'SUBMITTED'"
                         // exclude the Visit Information form itself
@@ -129,7 +132,8 @@ public class UnsubmittedFormsCleanupTask implements Runnable
                     visitInformationQuestionnaire,
                     clinicPath,
                     timeQuestion,
-                    DateUtils.toString(upperLimit)),
+                    DateUtils.toString(upperLimit),
+                    DateUtils.toString(lowerLimit)),
                     Query.JCR_SQL2);
                 resources.forEachRemaining(form -> {
                     try {
