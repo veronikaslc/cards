@@ -26,6 +26,7 @@ import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeFormatterBuilder;
 import java.time.temporal.ChronoField;
+import java.time.temporal.ChronoUnit;
 import java.time.temporal.TemporalAccessor;
 import java.util.Arrays;
 import java.util.Calendar;
@@ -145,6 +146,33 @@ public final class DateUtils
             return null;
         }
         return date;
+    }
+
+    /**
+     * Return a copy of the passed date at midnight.
+     *
+     * @param date the source date+time, will not be modified.
+     * @return a date instance at the same date, but at midnight
+     */
+    public static ZonedDateTime atMidnight(final ZonedDateTime date)
+    {
+        return date.truncatedTo(ChronoUnit.DAYS);
+    }
+
+    /**
+     * Return a copy of the passed date at midnight.
+     *
+     * @param date the source date+time, will not be modified.
+     * @return a date instance at the same date, but at midnight
+     */
+    public static Calendar atMidnight(final Calendar date)
+    {
+        final Calendar result = (Calendar) date.clone();
+        result.set(Calendar.HOUR_OF_DAY, 0);
+        result.set(Calendar.MINUTE, 0);
+        result.set(Calendar.SECOND, 0);
+        result.set(Calendar.MILLISECOND, 0);
+        return result;
     }
 
     /**
