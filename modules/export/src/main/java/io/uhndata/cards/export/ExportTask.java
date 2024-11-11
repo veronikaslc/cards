@@ -177,7 +177,7 @@ public class ExportTask implements Runnable
 
     private String cleanString(String input)
     {
-        return input.replaceAll("[^A-Za-z0-9_.-]", "");
+        return input.replaceAll("[^A-Za-z0-9 _.-]", "");
     }
 
     private String getTargetFileName(final ResourceIdentifier identifier, final ZonedDateTime startDate,
