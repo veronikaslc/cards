@@ -332,7 +332,7 @@
     "io.uhndata.cards.export.ExportConfig~UHN-Labeled-Forms":{
       "name": "UHN-Labeled-Forms",
       "frequencyInDays": 7,
-      "export.schedule": "0 0 2 ? * SAT *",
+      "exportSchedule": "0 0 2 ? * SAT *",
       "retriever": "Questionnaires with modified forms",
       "retrieverParameters": [
         "questionnaire=/Questionnaires/YVM",
@@ -352,7 +352,7 @@
     "io.uhndata.cards.export.ExportConfig~UHN-Raw-Forms":{
       "name": "UHN-Raw-Forms",
       "frequencyInDays": 7,
-      "export.schedule": "0 0 2 ? * SAT *",
+      "exportSchedule": "0 0 2 ? * SAT *",
       "retriever": "Questionnaires with modified forms",
       "retrieverParameters": [
         "questionnaire=/Questionnaires/YVM",
@@ -372,7 +372,7 @@
     "io.uhndata.cards.export.ExportConfig~UHN-Survey-Events":{
       "name": "UHN-Survey-Events",
       "frequencyInDays": 7,
-      "export.schedule": "0 0 2 ? * SAT *",
+      "exportSchedule": "0 0 2 ? * SAT *",
       "retriever": "Questionnaires with modified forms",
       "retrieverParameters": [
         "questionnaire=/Questionnaires/Survey events",
