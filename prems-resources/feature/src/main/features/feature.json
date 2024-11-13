@@ -383,6 +383,29 @@
       "storage": "filesystem",
       "storageParameters": "savePath=/csv-export"
     },
+    "io.uhndata.cards.export.ExportConfig~DailyBackup":{
+      "name": "Daily-Backup",
+      "frequencyInDays": 1,
+      "exportSchedule": "0 0 1 * * ? *",
+      "retriever": "Questionnaires with modified forms",
+      "retrieverParameters": [
+        "questionnaire=/Questionnaires/CPESIC",
+        "questionnaire=/Questionnaires/IC",
+        "questionnaire=/Questionnaires/OAIP",
+        "questionnaire=/Questionnaires/OED",
+        "questionnaire=/Questionnaires/PMAC",
+        "questionnaire=/Questionnaires/Rehab",
+        "questionnaire=/Questionnaires/YVM",
+        "questionnaire=/Questionnaires/Patient information",
+        "questionnaire=/Questionnaires/Visit information",
+        "questionnaire=/Questionnaires/Survey events",
+        "selectors=.csvHeader:raw.-dereference.dataOption:formSelectors=-dereference\\.simple\\.deep\\.-identify\\.nolinks"
+      ],
+      "formatter": "json",
+      "fileNameFormat": "{resourcePath}_{today}.json",
+      "storage": "filesystem",
+      "storageParameters": "savePath=./logs/backupExport"
+    },
 
     // Clarity import scheduling
 
