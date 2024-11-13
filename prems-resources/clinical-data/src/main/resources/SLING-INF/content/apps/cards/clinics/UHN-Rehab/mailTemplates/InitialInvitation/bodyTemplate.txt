@@ -1,4 +1,4 @@
-Dear ${first_name} ${last_name},
+Good morning,
 
 You are receiving this email because you have recently been discharged from a
 University Health Network (UHN) hospital.
