@@ -100,6 +100,8 @@ public class UnsubmittedFormsCleanupTask implements Runnable
                 if (clinicNode.hasProperty("daysRelativeToEventWhileSurveyIsValid")) {
                     delay = (int) clinicNode.getProperty("daysRelativeToEventWhileSurveyIsValid").getLong();
                 }
+                // Leave two more months as a grace period in which we can identify problems
+                delay += 61;
                 ZonedDateTime upperLimit = DateUtils.atMidnight(ZonedDateTime.now()).minusDays(delay);
                 // Since this runs nightly, it's OK to look for the results just from a few days before
                 ZonedDateTime lowerLimit = upperLimit.minusDays(7);
