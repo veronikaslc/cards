@@ -1,4 +1,4 @@
-Dear ${first_name} ${last_name},
+Good morning,
 
 You are receiving this email because of your recent visit at a University
 Health Network (UHN) hospital within the last 30 days. We’d like to
