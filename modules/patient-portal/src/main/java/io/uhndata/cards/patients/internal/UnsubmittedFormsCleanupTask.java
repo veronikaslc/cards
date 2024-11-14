@@ -21,6 +21,7 @@ package io.uhndata.cards.patients.internal;
 
 import java.time.ZonedDateTime;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 
 import javax.jcr.Node;
@@ -48,9 +49,12 @@ import io.uhndata.cards.utils.DateUtils;
  */
 public class UnsubmittedFormsCleanupTask implements Runnable
 {
-
     /** Default log. */
     private static final Logger LOGGER = LoggerFactory.getLogger(UnsubmittedFormsCleanupTask.class);
+
+    private final int gracePeriod;
+
+    private final List<String> excludedQuestionnaires;
 
     /** Provides access to resources. */
     private final ResourceResolverFactory resolverFactory;
@@ -65,9 +69,12 @@ public class UnsubmittedFormsCleanupTask implements Runnable
      * @param resolverFactory a valid ResourceResolverFactory providing access to resources
      * @param patientAccessConfiguration details on patient authentication for token lifetime purposes
      */
-    UnsubmittedFormsCleanupTask(final ResourceResolverFactory resolverFactory, final ThreadResourceResolverProvider rrp,
+    UnsubmittedFormsCleanupTask(final int gracePeriod, final String[] excludedQuestionnaires,
+        final ResourceResolverFactory resolverFactory, final ThreadResourceResolverProvider rrp,
         final PatientAccessConfiguration patientAccessConfiguration)
     {
+        this.gracePeriod = gracePeriod;
+        this.excludedQuestionnaires = List.of(excludedQuestionnaires);
         this.resolverFactory = resolverFactory;
         this.rrp = rrp;
         this.patientAccessConfiguration = patientAccessConfiguration;
@@ -100,8 +107,8 @@ public class UnsubmittedFormsCleanupTask implements Runnable
                 if (clinicNode.hasProperty("daysRelativeToEventWhileSurveyIsValid")) {
                     delay = (int) clinicNode.getProperty("daysRelativeToEventWhileSurveyIsValid").getLong();
                 }
-                // Leave two more months as a grace period in which we can identify problems
-                delay += 61;
+                // Leave some time as a grace period in which we can identify problems
+                delay += this.gracePeriod;
                 ZonedDateTime upperLimit = DateUtils.atMidnight(ZonedDateTime.now()).minusDays(delay);
                 // Since this runs nightly, it's OK to look for the results just from a few days before
                 ZonedDateTime lowerLimit = upperLimit.minusDays(7);
@@ -130,6 +137,10 @@ public class UnsubmittedFormsCleanupTask implements Runnable
                         + "  and not dataForm.statusFlags = 'SUBMITTED'"
                         // exclude the Visit Information form itself
                         + "  and dataForm.questionnaire <> '%1$s'"
+                        // exclude any configured questionnaires
+                        + (this.excludedQuestionnaires.isEmpty() ? ""
+                            : this.excludedQuestionnaires.stream().map(path -> getId(path, resolver))
+                                .reduce("", (res, id) -> res + " and dataForm.questionnaire <> '" + id + "'"))
                         + " option (index tag cards)",
                     visitInformationQuestionnaire,
                     clinicPath,
@@ -155,5 +166,10 @@ public class UnsubmittedFormsCleanupTask implements Runnable
                 this.rrp.pop();
             }
         }
+    }
+
+    private String getId(final String path, final ResourceResolver resolver)
+    {
+        return resolver.getResource(path).getValueMap().get("jcr:uuid", "");
     }
 }

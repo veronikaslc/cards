@@ -26,6 +26,9 @@ import org.osgi.service.component.ComponentContext;
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
+import org.osgi.service.metatype.annotations.AttributeDefinition;
+import org.osgi.service.metatype.annotations.Designate;
+import org.osgi.service.metatype.annotations.ObjectClassDefinition;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -39,6 +42,7 @@ import io.uhndata.cards.resolverProvider.ThreadResourceResolverProvider;
  * @since 0.9.2
  */
 @Component(immediate = true)
+@Designate(ocd = UnsubmittedFormsCleanupScheduler.Config.class)
 public class UnsubmittedFormsCleanupScheduler
 {
     /** Default log. */
@@ -62,16 +66,36 @@ public class UnsubmittedFormsCleanupScheduler
     @Reference
     private Scheduler scheduler;
 
+    @ObjectClassDefinition(name = "Unsubmitted Forms Cleanup",
+        description = "Configuration for if/when to delete unsubmitted patient forms.")
+    public @interface Config
+    {
+        @AttributeDefinition(name = "Schedule",
+            description = "A schedule expression determining when the cleanup job runs.")
+        String schedule() default "0 0 1 * * ? *";
+
+        @AttributeDefinition(name = "Grace period",
+            description = "Extra delay after the survey expire in which unsubmitted forms are not yet deleted."
+                + " This is a number of days, 0 means that unsumitted forms are deleted as soon as the visit expires.")
+        int gracePeriod() default 30 + 31;
+
+        @AttributeDefinition(name = "Excluded Questionnaires",
+            description = "Do not delete any Forms from any of these types of Questionnaires."
+                + " Enter paths to questionnaires, such as '/Questionnaires/OAIP'.")
+        String[] excludedQuestionnaires() default {};
+    }
+
     @Activate
-    protected void activate(final ComponentContext componentContext) throws Exception
+    protected void activate(final Config config, final ComponentContext componentContext) throws Exception
     {
         try {
             // Every night at midnight
-            final ScheduleOptions options = this.scheduler.EXPR("0 0 1 * * ? *");
+            final ScheduleOptions options = this.scheduler.EXPR(config.schedule());
             options.name(SCHEDULER_JOB_NAME);
             options.canRunConcurrently(false);
 
-            final Runnable cleanupJob = new UnsubmittedFormsCleanupTask(this.resolverFactory, this.rrp,
+            final Runnable cleanupJob = new UnsubmittedFormsCleanupTask(config.gracePeriod(),
+                config.excludedQuestionnaires(), this.resolverFactory, this.rrp,
                 this.patientAccessConfiguration);
             this.scheduler.schedule(cleanupJob, options);
         } catch (final Exception e) {
