@@ -86,7 +86,11 @@
       ],
       "formatter": "rawFile",
       "fileNameFormat": "{resourcePath}",
-      "storage": "s3"
+      "storage": "s3",
+      "storageParameters": [
+        "blockedApplicationMimeTypeWorkaround=true",
+        "chunkSizeInMB=5"
+      ]
     }
   }
 }

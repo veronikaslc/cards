@@ -22,6 +22,7 @@ package io.uhndata.cards.export.internal.formatters;
 import java.time.ZonedDateTime;
 import java.util.Collections;
 
+import javax.jcr.Binary;
 import javax.jcr.Node;
 import javax.jcr.RepositoryException;
 
@@ -51,8 +52,10 @@ public class RawFileDataFormatter implements DataFormatter
             n = n.getNode("jcr:content");
         }
         if (n.isNodeType("nt:resource") && n.hasProperty("jcr:data")) {
+            final Binary content = n.getProperty("jcr:data").getBinary();
             return new ResourceRepresentation(what,
-                n.getProperty("jcr:data").getBinary().getStream(),
+                content.getStream(),
+                content.getSize(),
                 n.hasProperty("jcr:mimeType") ? n.getProperty("jcr:mimeType").getString() : "application/octet-stream",
                 Collections.emptyList());
         } else {

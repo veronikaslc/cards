@@ -93,17 +93,21 @@ public interface DataPipelineStep
 
         private final InputStream data;
 
+        private final long size;
+
         private final List<String> dataContents;
 
         private final String mimeType;
 
         public ResourceRepresentation(final ResourceIdentifier identifier,
             final InputStream data,
+            final long size,
             final String mimeType,
             final List<String> dataContents)
         {
             this.identifier = identifier;
             this.data = data;
+            this.size = size;
             this.mimeType = mimeType;
             this.dataContents = dataContents;
         }
@@ -116,6 +120,11 @@ public interface DataPipelineStep
         public InputStream getRepresentation()
         {
             return this.data;
+        }
+
+        public long getRepresentationSize()
+        {
+            return this.size;
         }
 
         public List<String> getDataContents()

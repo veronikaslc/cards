@@ -210,7 +210,8 @@ public class ExportTask implements Runnable
     private void output(ResourceRepresentation input, String filename)
     {
         try {
-            this.store.store(input.getRepresentation(), filename, input.getMimeType(), this.config);
+            this.store.store(input.getRepresentation(), input.getRepresentationSize(), filename, input.getMimeType(),
+                this.config);
             input.getDataContents().forEach(form -> {
                 LOGGER.info("Exported {}", form);
                 Metrics.increment(this.resolverFactory, "S3ExportedForms", 1);

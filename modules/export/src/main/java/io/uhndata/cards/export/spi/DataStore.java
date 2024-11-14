@@ -25,6 +25,6 @@ import io.uhndata.cards.export.ExportConfigDefinition;
 
 public interface DataStore extends DataPipelineStep
 {
-    void store(InputStream contents, String filename, String mimetype, ExportConfigDefinition config)
+    void store(InputStream contents, long size, String filename, String mimetype, ExportConfigDefinition config)
         throws IOException;
 }

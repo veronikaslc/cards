@@ -49,10 +49,12 @@ public class CSVDataFormatter implements DataFormatter
         throws RepositoryException
     {
         Resource r = resolver.resolve(what.getExportPath() + ".csv");
+        byte[] bytes = r.adaptTo(CSVString.class).toString().getBytes(StandardCharsets.UTF_8);
 
         return new ResourceRepresentation(what,
             // FIXME Use streaming instead of building the whole CSV in memory
-            new ByteArrayInputStream(r.adaptTo(CSVString.class).toString().getBytes(StandardCharsets.UTF_8)),
+            new ByteArrayInputStream(bytes),
+            bytes.length,
             "text/csv",
             getContentsSummary(what, config, resolver));
     }

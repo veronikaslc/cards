@@ -41,7 +41,7 @@ public class FilesystemDataStore implements DataStore
     }
 
     @Override
-    public void store(final InputStream contents, final String filename, final String mimetype,
+    public void store(final InputStream contents, final long size, final String filename, final String mimetype,
         final ExportConfigDefinition config) throws IOException
     {
         final File targetFile =
