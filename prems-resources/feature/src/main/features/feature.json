@@ -760,6 +760,15 @@
       "submittedFlagPath": "/Questionnaires/Visit information/surveys_submitted",
       "linkingSubjectType": "/SubjectTypes/Patient/Visit",
       "excludedQuestionnaires": ["/Questionnaires/Survey events"]
+    },
+    // Delete unsubmitted forms when they expire
+    "io.uhndata.cards.patients.internal.UnsubmittedFormsCleanupScheduler":{
+      // Too many things running at midnight, run an hour later
+      "schedule": "0 0 1 * * ? *",
+      // Keep forms for 2 months to avoid accidental data loss
+      "gracePeriod": 61,
+      // This is already excluded by access rights, but we can speedup queries this way
+      "excludedQuestionnaires": ["/Questionnaires/Survey events"]
     }
   }
 }

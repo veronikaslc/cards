@@ -72,12 +72,12 @@ public class UnsubmittedFormsCleanupScheduler
     {
         @AttributeDefinition(name = "Schedule",
             description = "A schedule expression determining when the cleanup job runs.")
-        String schedule() default "0 0 1 * * ? *";
+        String schedule() default "0 0 0 * * ? *";
 
         @AttributeDefinition(name = "Grace period",
             description = "Extra delay after the survey expire in which unsubmitted forms are not yet deleted."
                 + " This is a number of days, 0 means that unsumitted forms are deleted as soon as the visit expires.")
-        int gracePeriod() default 30 + 31;
+        int gracePeriod() default 0;
 
         @AttributeDefinition(name = "Excluded Questionnaires",
             description = "Do not delete any Forms from any of these types of Questionnaires."
