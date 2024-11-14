@@ -26,32 +26,25 @@ import javax.jcr.RepositoryException;
 import javax.json.JsonValue;
 
 import org.osgi.service.component.annotations.Component;
-import org.osgi.service.component.annotations.Reference;
 
-import io.uhndata.cards.forms.api.FormUtils;
 import io.uhndata.cards.serialize.spi.ResourceJsonProcessor;
 
 /**
  * Remove any properties from the output that woulkd not be present in an importable questionnaire XML.
  * This processor is intended to be run alongside the following other processors:
  * * .deep
- * * .simple
  * * .-identify
- * * .nolinks
  * The name of this processor is {@code jsontoxml}.
  *
  * @version $Id$
  */
 @Component(immediate = true)
-public class JsonToXmlProcessor implements ResourceJsonProcessor
+public class ImportableProcessor implements ResourceJsonProcessor
 {
-    @Reference
-    private FormUtils formUtils;
-
     @Override
     public String getName()
     {
-        return "jsontoxml";
+        return "importable";
     }
 
     @Override
@@ -65,16 +58,36 @@ public class JsonToXmlProcessor implements ResourceJsonProcessor
         final Function<Node, JsonValue> serializeNode)
     {
         try {
-            switch (property.getName()) {
-                case "jcr:created":
-                case "jcr:createdBy":
-                case "jcr:lastModified":
-                case "jcr:lastModifiedBy":
-                case "jcr:uuid":
-                    // Skip most jcr nodes. Can't skip all as jcr:primaryType is still needed
-                    return null;
-                default:
-                    return input;
+            String propertyName = property.getName();
+
+            JsonValue result = input;
+
+            // Remove properties with certain prefixes
+            if (propertyName.startsWith("jcr:") && !"jcr:primaryType".equals(propertyName)) {
+                // Remove all jcr properties other than primaryType
+                result = null;
+            } else if (propertyName.startsWith("sling:")) {
+                // Remove all sling properties
+                result = null;
+            }
+            // TODO: Add in better handling for requiredSubjectTypes
+
+            return result;
+        } catch (RepositoryException e) {
+            // Really shouldn't happen
+            return input;
+        }
+    }
+
+    @Override
+    public JsonValue processChild(final Node node, final Node child, final JsonValue input,
+        final Function<Node, JsonValue> serializeNode)
+    {
+        try {
+            // Remove link nodes.
+            // TODO: If inter-processor dependencies are added, add a dependency to .nolinks instead
+            if (child.isNodeType("cards:Links")) {
+                return null;
             }
         } catch (RepositoryException e) {
             // Really shouldn't happen

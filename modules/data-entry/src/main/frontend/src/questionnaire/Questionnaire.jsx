@@ -139,7 +139,7 @@ let Questionnaire = (props) => {
                 size="medium"
                 component="a"
                 download={`${id}.json`}
-                href={`/Questionnaires/${id}.deep.simple.-identify.nolinks.jsontoxml.json`}
+                href={`/Questionnaires/${id}.deep.-identify.importable.json`}
                 onClick={() => {
                     setActionsMenu(null);
                 }}>
