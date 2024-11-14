@@ -22,6 +22,7 @@ import { Link, useHistory } from 'react-router-dom';
 import PropTypes from "prop-types";
 
 import {
+  Button,
   CircularProgress,
   Grid,
   IconButton,
@@ -132,6 +133,18 @@ let Questionnaire = (props) => {
               variant="text"
               onClose={() => { setActionsMenu(null); }}
           />
+        </ListItem>
+        <ListItem className={classes.actionsMenuItem}>
+            <Button
+                size="medium"
+                component="a"
+                download={`${id}.json`}
+                href={`/Questionnaires/${id}.deep.-identify.importable.json`}
+                onClick={() => {
+                    setActionsMenu(null);
+                }}>
+                    Export as JSON
+            </Button>
         </ListItem>
         <ListItem className={classes.actionsMenuItem}>
           <DeleteButton
