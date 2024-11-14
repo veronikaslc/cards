@@ -20,8 +20,8 @@
 package io.uhndata.cards.patients.internal;
 
 import java.time.ZonedDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 
 import javax.jcr.Node;
@@ -38,6 +38,7 @@ import org.slf4j.LoggerFactory;
 
 import io.uhndata.cards.patients.api.PatientAccessConfiguration;
 import io.uhndata.cards.resolverProvider.ThreadResourceResolverProvider;
+import io.uhndata.cards.utils.DateUtils;
 
 /**
  * Periodically remove visit data forms (except the Visit Information itself) belonging to past visits that haven't been
@@ -48,9 +49,12 @@ import io.uhndata.cards.resolverProvider.ThreadResourceResolverProvider;
  */
 public class UnsubmittedFormsCleanupTask implements Runnable
 {
-
     /** Default log. */
     private static final Logger LOGGER = LoggerFactory.getLogger(UnsubmittedFormsCleanupTask.class);
+
+    private final int gracePeriod;
+
+    private final List<String> excludedQuestionnaires;
 
     /** Provides access to resources. */
     private final ResourceResolverFactory resolverFactory;
@@ -65,9 +69,12 @@ public class UnsubmittedFormsCleanupTask implements Runnable
      * @param resolverFactory a valid ResourceResolverFactory providing access to resources
      * @param patientAccessConfiguration details on patient authentication for token lifetime purposes
      */
-    UnsubmittedFormsCleanupTask(final ResourceResolverFactory resolverFactory, final ThreadResourceResolverProvider rrp,
+    UnsubmittedFormsCleanupTask(final int gracePeriod, final String[] excludedQuestionnaires,
+        final ResourceResolverFactory resolverFactory, final ThreadResourceResolverProvider rrp,
         final PatientAccessConfiguration patientAccessConfiguration)
     {
+        this.gracePeriod = gracePeriod;
+        this.excludedQuestionnaires = List.of(excludedQuestionnaires);
         this.resolverFactory = resolverFactory;
         this.rrp = rrp;
         this.patientAccessConfiguration = patientAccessConfiguration;
@@ -84,7 +91,7 @@ public class UnsubmittedFormsCleanupTask implements Runnable
             // Gather the needed UUIDs to place in the query
             final String visitInformationQuestionnaire =
                 (String) resolver.getResource("/Questionnaires/Visit information").getValueMap().get("jcr:uuid");
-            final String time =
+            final String timeQuestion =
                 (String) resolver.getResource("/Questionnaires/Visit information/time").getValueMap().get("jcr:uuid");
             final int patientTokenLifetime = this.patientAccessConfiguration.getDaysRelativeToEventWhileSurveyIsValid();
 
@@ -100,6 +107,11 @@ public class UnsubmittedFormsCleanupTask implements Runnable
                 if (clinicNode.hasProperty("daysRelativeToEventWhileSurveyIsValid")) {
                     delay = (int) clinicNode.getProperty("daysRelativeToEventWhileSurveyIsValid").getLong();
                 }
+                // Leave some time as a grace period in which we can identify problems
+                delay += this.gracePeriod;
+                ZonedDateTime upperLimit = DateUtils.atMidnight(ZonedDateTime.now()).minusDays(delay);
+                // Since this runs nightly, it's OK to look for the results just from a few days before
+                ZonedDateTime lowerLimit = upperLimit.minusDays(7);
 
                 // Get all data forms for the specific clinic
                 final Iterator<Resource> resources = resolver.findResources(String.format(
@@ -116,38 +128,48 @@ public class UnsubmittedFormsCleanupTask implements Runnable
                         // link to the correct Visit Information questionnaire
                         + "  visitInformation.questionnaire = '%1$s'"
                         // link to the exact clinic in Visit Information form
-                        + "  and clinic.value = '%4$s'"
+                        + "  and clinic.value = '%2$s'"
                         // the visit date is in the past
-                        + "  and visitDate.question = '%2$s'"
-                        + "  and visitDate.value < '%3$s'"
+                        + "  and visitDate.question = '%3$s'"
+                        + "  and visitDate.value < '%4$s'"
+                        + "  and visitDate.value >= '%5$s'"
                         // the form is not submitted
                         + "  and not dataForm.statusFlags = 'SUBMITTED'"
                         // exclude the Visit Information form itself
                         + "  and dataForm.questionnaire <> '%1$s'"
+                        // exclude any configured questionnaires
+                        + (this.excludedQuestionnaires.isEmpty() ? ""
+                            : this.excludedQuestionnaires.stream().map(path -> getId(path, resolver))
+                                .reduce("", (res, id) -> res + " and dataForm.questionnaire <> '" + id + "'"))
                         + " option (index tag cards)",
-                    visitInformationQuestionnaire, time,
-                    ZonedDateTime.now().minusDays(delay)
-                        .format(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSSxxx")), clinicPath),
+                    visitInformationQuestionnaire,
+                    clinicPath,
+                    timeQuestion,
+                    DateUtils.toString(upperLimit),
+                    DateUtils.toString(lowerLimit)),
                     Query.JCR_SQL2);
                 resources.forEachRemaining(form -> {
                     try {
                         resolver.delete(form);
+                        resolver.commit();
                     } catch (final PersistenceException e) {
                         LOGGER.warn("Failed to delete expired form {}: {}", form.getPath(), e.getMessage());
                     }
                 });
-                resolver.commit();
             }
         } catch (RepositoryException e) {
             LOGGER.warn("Failed to fetch forms: {}", e.getMessage());
         } catch (final LoginException e) {
             LOGGER.warn("Invalid setup, service rights not set up for the expired forms cleanup task");
-        } catch (final PersistenceException e) {
-            LOGGER.warn("Failed to delete expired forms: {}", e.getMessage());
         } finally {
             if (mustPopResolver) {
                 this.rrp.pop();
             }
         }
+    }
+
+    private String getId(final String path, final ResourceResolver resolver)
+    {
+        return resolver.getResource(path).getValueMap().get("jcr:uuid", "");
     }
 }
