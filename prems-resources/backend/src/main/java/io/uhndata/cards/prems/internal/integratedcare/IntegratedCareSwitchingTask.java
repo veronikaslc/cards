@@ -178,13 +178,16 @@ public class IntegratedCareSwitchingTask implements Runnable
                     + "  and status.question = '%4$s' and status.value = 'in-progress'"
                     // the visit happened more than 30 days ago
                     + "  and visitDate.question = '%5$s' and visitDate.value < '%6$s'"
+                    // since this runs nightly, it's OK to look for the results just from a few days before
+                    + "  and visitDate.value >= '%7$s'"
                     // use the fast index for the query
                     + " OPTION (index tag cards)",
                 this.visitInformationQuestionnaire.getIdentifier(),
                 this.clinicQuestion.getIdentifier(), clinic,
                 this.statusQuestion.getIdentifier(),
                 this.visitDateQuestion.getIdentifier(),
-                DateUtils.toString(DateUtils.atMidnight(ZonedDateTime.now()).minusDays(30)));
+                DateUtils.toString(DateUtils.atMidnight(ZonedDateTime.now()).minusDays(30)),
+                DateUtils.toString(DateUtils.atMidnight(ZonedDateTime.now()).minusDays(37)));
             final NodeIterator visits = session.getWorkspace().getQueryManager().createQuery(query,
                 Query.JCR_SQL2).execute().getNodes();
             while (visits.hasNext()) {
