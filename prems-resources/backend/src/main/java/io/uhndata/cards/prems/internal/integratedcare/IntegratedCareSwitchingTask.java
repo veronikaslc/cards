@@ -20,7 +20,6 @@
 package io.uhndata.cards.prems.internal.integratedcare;
 
 import java.time.ZonedDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -38,6 +37,7 @@ import org.slf4j.LoggerFactory;
 
 import io.uhndata.cards.forms.api.FormUtils;
 import io.uhndata.cards.resolverProvider.ThreadResourceResolverProvider;
+import io.uhndata.cards.utils.DateUtils;
 
 /**
  * Periodically switch visits eligible for Integrated Care surveys from the initial one (ED, IP or EDIP) to the
@@ -177,14 +177,17 @@ public class IntegratedCareSwitchingTask implements Runnable
                     // the status is in-progress
                     + "  and status.question = '%4$s' and status.value = 'in-progress'"
                     // the visit happened more than 30 days ago
-                    + "  and visitDate.question = '%5$s' and visitDate.value <= '%6$s'"
+                    + "  and visitDate.question = '%5$s' and visitDate.value < '%6$s'"
+                    // since this runs nightly, it's OK to look for the results just from a few days before
+                    + "  and visitDate.value >= '%7$s'"
                     // use the fast index for the query
                     + " OPTION (index tag cards)",
                 this.visitInformationQuestionnaire.getIdentifier(),
                 this.clinicQuestion.getIdentifier(), clinic,
                 this.statusQuestion.getIdentifier(),
                 this.visitDateQuestion.getIdentifier(),
-                ZonedDateTime.now().minusDays(30).format(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSSxxx")));
+                DateUtils.toString(DateUtils.atMidnight(ZonedDateTime.now()).minusDays(30)),
+                DateUtils.toString(DateUtils.atMidnight(ZonedDateTime.now()).minusDays(37)));
             final NodeIterator visits = session.getWorkspace().getQueryManager().createQuery(query,
                 Query.JCR_SQL2).execute().getNodes();
             while (visits.hasNext()) {
