@@ -600,7 +600,7 @@
       "conditions": ["DEATH_DATE is not empty"]
     },
     "io.uhndata.cards.clarity.importer.internal.ConfiguredDiscardFilter~Discard-Deceased":{
-      "supportedTypes": ["inpatient-ed"],
+      "supportedTypes": ["inpatient-ed", "yvm", "pmh-ac"],
       "priority": 20,
       "conditions": ["DISCH_DISPOSITION in Cad Donor; Deceased; Died on Leav; Died; Donor; Stillbirth; Suicide Out; Death After; MAID; Death on Arr; IP Medically; IP In-Facili; IP Died Whil; IP Out of Fa; DOA; OP Medically; OP In-Facili; Suicide fac; Still Born; Pt. suicide; Expired LOA; Expired; Med assist d; Suicide fac; DOA"]
     },
