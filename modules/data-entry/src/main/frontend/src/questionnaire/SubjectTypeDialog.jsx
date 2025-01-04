@@ -15,13 +15,14 @@
   under the License.
 */
 
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 
 import { Button, Grid, Dialog, DialogTitle, DialogActions, DialogContent, MenuItem, TextField, Typography, Select, FormHelperText } from "@mui/material";
 
 import withStyles from '@mui/styles/withStyles';
 
 import QuestionnaireStyle from "./QuestionnaireStyle.jsx";
+import { fetchWithReLogin, GlobalLoginContext } from "../login/loginDialogue.js";
 
 function SubjectTypeDialog(props) {
   const { open, onClose, onSubmit, data, isEdit, currentSubjectType, classes } = props;
@@ -38,6 +39,29 @@ function SubjectTypeDialog(props) {
   const [ error, setError ] = useState(null);
   const [ isDuplicateLabel, setIsDuplicateLabel ] = useState(false);
   const [ isInvalidRegexp, setIsInvalidRegexp ] = useState(false);
+
+  const [ nonMatchingSubjectsCount, setNonMatchingSubjectsCount ] = useState(0);
+  const [ disableProgress, setDisableProgress ] = useState();
+  const [ displayPopup, setDisplayPopup ] = React.useState(false);
+
+  const globalLoginDisplay = useContext(GlobalLoginContext);
+
+  // Fetch all Subjects with the certain type if we are editing subject with existing Subjects
+  const fetchData = async () => {
+    const query = 'select s.* from [cards:Subject] as s inner join [cards:SubjectType] as t on s.type = t.[jcr:uuid] where ' +
+        `t.[jcr:uuid] = '${currentSubjectType?.["jcr:uuid"]}'`;
+    const urlBase = '/query?query=' + encodeURIComponent(query);
+    let url = new URL(urlBase, window.location.origin);
+    url.searchParams.set("limit", 1000);
+    const response = await fetchWithReLogin(globalLoginDisplay, url);
+    const json = await response.json();
+    // group subjects by type
+    const ids = json["rows"].reduce((identifiers, item) => {
+      identifiers.push(item.identifier);
+      return identifiers;
+    }, []);
+    return ids;
+  };
 
   let validateLabel = (name) => {
     setError("");
@@ -59,8 +83,47 @@ function SubjectTypeDialog(props) {
     }
   }
 
+  let countNonMatchingStrings = (array) => {
+    if (!Array.isArray(array) || array.length == 0) {
+      return 0;
+    }
+
+    let pattern = new RegExp(idPattern);
+
+    return array.reduce((count, str) => {
+      if (typeof str !== 'string' || !pattern.test(str)) {
+        count++;
+      }
+      return count;
+    }, 0);
+  }
+
   let handleSubjectType = () => {
     setError("");
+
+    // if we are updating a valid regexp to a subject type with existing subjects that had no saved regexp yet
+    if (isEdit && idPattern && currentSubjectType["idPattern"] !== idPattern && currentSubjectType.instanceCount > 0 && !isInvalidRegexp && !disableProgress) {
+      // disable the save button
+      setDisableProgress(true);
+      // count non-matching subjects
+      fetchData().then(ids => {
+        let subjectsCount = countNonMatchingStrings(ids);
+        setNonMatchingSubjectsCount(subjectsCount);
+        if (subjectsCount > 0) {
+          setDisplayPopup(true);
+          return;
+        } else {
+	      setDisableProgress(false);
+          handleSubmit();
+        }
+      });
+    } else {
+      setDisableProgress(false);
+      handleSubmit();
+    }
+  }
+
+  let handleSubmit = () => {
     let formData = new FormData();
 
     if (!isEdit) {
@@ -147,7 +210,7 @@ function SubjectTypeDialog(props) {
     onClose();
   }
 
-  return (
+  return (<>
     <Dialog
       maxWidth="sm"
       open={open}
@@ -265,17 +328,30 @@ function SubjectTypeDialog(props) {
                                 currentSubjectType?.["idPattern"] == idPattern &&
                                 currentSubjectType?.["idPatternHint"] == idPatternHint
                                 )
+                  || disableProgress
           }
           color="primary"
           variant="contained"
           size="small"
-          onClick={(event) => { event.preventDefault(); handleSubjectType(); }}
+          onClick={(event) => { handleSubjectType(); }}
          >
           { isEdit ? "Save" : "Create" }
         </Button>
         <Button variant="outlined" size="small" onClick={close}>Close</Button>
       </DialogActions>
     </Dialog>
+
+    <Dialog onClose={() => { setDisplayPopup(false) }} open={displayPopup} maxWidth="xs">
+      <DialogTitle>Warning</DialogTitle>
+      <DialogContent dividers>
+        {nonMatchingSubjectsCount} subjects of type {label} have identifiers that do not match this pattern. Proceed anyway?
+      </DialogContent>
+      <DialogActions>
+        <Button variant="text" size="small" onClick={() => { setDisableProgress(false); setDisplayPopup(false); }}>No</Button>
+        <Button variant="contained" color="primary" size="small" onClick={() => { handleSubjectType(); setDisplayPopup(false); }}>Yes</Button>
+      </DialogActions>
+    </Dialog>
+    </>
   );
 }
 
