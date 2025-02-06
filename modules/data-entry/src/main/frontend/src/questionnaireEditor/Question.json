@@ -16,6 +16,7 @@
           "user": {
             "minAnswers": "long",
             "maxAnswers": "long",
+            "defaultValue": "string",
             "validationRegexp": "string",
             "validationErrorText": "markdown",
             "liveValidation": "boolean",
@@ -74,6 +75,7 @@
         "minAnswers": {"0":{}, "1":{}},
         "yesLabel": "string",
         "noLabel": "string",
+        "defaultValue": "string",
         "enableUnknown": {
            "true" : {
              "unknownLabel": "string"
@@ -101,7 +103,8 @@
         "entryMode": {
           "user": {
              "lowerLimit": "string",
-             "upperLimit": "string"
+             "upperLimit": "string",
+             "defaultValue": "string"
           },
           "computed": {
             "expression": "code",
@@ -137,6 +140,7 @@
             "disableNegativeInput" : "boolean",
             "minValue": "double",
             "maxValue": "double",
+            "defaultValue": "string",
             "disableMinMaxValueEnforcement" : "boolean",
             "messageForValuesOutsideMinMax" : "markdown",
             "displayMode": {
@@ -202,6 +206,7 @@
             "disableNegativeInput" : "boolean",
             "minValue": "double",
             "maxValue": "double",
+            "defaultValue": "string",
             "disableMinMaxValueEnforcement" : "boolean",
             "messageForValuesOutsideMinMax" : "markdown",
             "displayMode": {
@@ -269,6 +274,7 @@
             "disableNegativeInput" : "boolean",
             "minValue": "double",
             "maxValue": "double",
+            "defaultValue": "string",
             "disableMinMaxValueEnforcement" : "boolean",
             "messageForValuesOutsideMinMax" : "markdown",
             "displayMode": {
@@ -334,6 +340,7 @@
           "user": {
             "minAnswers": "long",
             "maxAnswers": "long",
+            "defaultValue": "string",
             "displayMode": {
               "input": {
                 "enableVocabularyBrowser" : "boolean",
@@ -390,6 +397,7 @@
           "user": {
             "minAnswers": "long",
             "maxAnswers": "long",
+            "defaultValue": "string",
             "displayMode": {
               "input": {
                 "propertiesToSearch" : "string",
@@ -441,6 +449,7 @@
           "user": {
             "lowerLimit": "string",
             "upperLimit": "string",
+            "defaultValue": "string",
             "errorText": "string"
           },
           "computed": {
@@ -473,18 +482,21 @@
       },
       "phone" : {
         "minAnswers": {"0":{}, "1":{}},
+        "defaultValue": "string",
         "defaultCountry": "string",
         "onlyCountries": "string",
         "regions": "string"
       },
       "address" : {
         "minAnswers": {"0":{}, "1":{}},
+        "defaultValue": "string",
         "countries": "string",
         "searchPlacesAround": "string"
       },
       "selectableArea": {
         "minAnswers": {"0":{}, "1":{}},
         "maxAnswers": "long",
+        "defaultValue": "string",
         "variant": {
           "type": "list",
           "primaryType": "cards:SelectableAreaVariant",
