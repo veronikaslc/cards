@@ -17,19 +17,21 @@
 //  under the License.
 //
 import React from "react";
-import SubjectView from "./SubjectView.jsx";
+
 import { getHierarchy } from "../questionnaire/SubjectIdentifier.jsx";
 import { getEntityIdentifier } from "../themePage/EntityIdentifier.jsx";
-
-import { Grid } from "@mui/material";
-import { withStyles } from 'tss-react/mui';
-import QuestionnaireStyle from "../questionnaire/QuestionnaireStyle.jsx";
+import DefaultSubjects from "../dataHomepage/Subjects.jsx";
 
 function Subjects(props) {
-  const { extension, classes, actionSwitches, columns } = props;
-  const extensionURL = extension?.["cards:extensionURL"]
 
-  const defaultColumns = [
+  const actionSwitches = {
+    edit: () => false,
+    delete: () => false,
+    create: () => false,
+    expand: () => false,
+  }
+
+  const columns = [
     {
       "key": "identifier",
       "label": "Identifier",
@@ -37,39 +39,24 @@ function Subjects(props) {
       "link": "dashboard+path",
     },
     {
-      "key": "type/label",
-      "label": "Type",
-      "format": "string",
-    },
-    {
       "key": "",
       "label": "Parents",
-      "format": (row) => (row['parents'] ? getHierarchy(row['parents'], undefined, undefined, extensionURL) : ''),
+      "format": (row) => (row['parents'] ? getHierarchy(row['parents'], undefined, undefined, props.extensionURL) : ''),
     },
     {
       "key": "jcr:created",
       "label": "Created on",
       "format": "date:yyyy-MM-dd HH:mm",
     },
-    {
-      "key": "jcr:createdBy",
-      "label": "Created by",
-      "format": "string",
-    },
-  ];
+  ]
 
   return (
-    <Grid container className={classes.dashboardContainer}>
-      <Grid className={classes.dashboardEntry} size={12}>
-        <SubjectView
-          expanded
-          columns={columns || defaultColumns}
-          extensionURL={extensionURL}
-          actionSwitches={actionSwitches}
-        />
-      </Grid>
-    </Grid>
+    <DefaultSubjects
+      actionSwitches={actionSwitches}
+      columns={columns}
+      {...props}
+    />
   );
 }
 
-export default withStyles(Subjects, QuestionnaireStyle);
+export default Subjects;

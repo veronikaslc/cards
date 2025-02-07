@@ -17,22 +17,21 @@
 //  under the License.
 //
 import React from "react";
+
 import { getHierarchy } from "../questionnaire/SubjectIdentifier.jsx";
-import { Grid } from "@mui/material";
-import { withStyles } from 'tss-react/mui';
-import { useLocation } from 'react-router';
-import questionnaireStyle from "../questionnaire/QuestionnaireStyle.jsx";
-import FormView from "./FormView.jsx";
 import { getEntityIdentifier } from "../themePage/EntityIdentifier.jsx";
+import DefaultForms from "../dataHomepage/Forms.jsx";
 
 function Forms(props) {
-  const { extension, classes, columns, actionSwitches } = props;
-  const location = useLocation();
-  const questionnaire = /questionnaire=([^&]+)/.exec(location.search)?.[1];
 
-  const extensionURL = extension?.["cards:extensionURL"]
+  const actionSwitches = {
+    edit: () => false,
+    delete: () => false,
+    create: () => false,
+    expand: () => false,
+  }
 
-  const defaultColumns = [
+  const columns = [
     {
       "key": "@name",
       "label": "Identifier",
@@ -42,7 +41,7 @@ function Forms(props) {
     {
       "key": "",
       "label": "Subject",
-      "format": (row) => (row.subject ? getHierarchy(row.subject, undefined, undefined, extensionURL) : ''),
+      "format": (row) => (row.subject ? getHierarchy(row.subject, undefined, undefined, props.extensionURL) : ''),
     },
     {
       "key": "questionnaire/title",
@@ -54,26 +53,15 @@ function Forms(props) {
       "label": "Created on",
       "format": "date:yyyy-MM-dd HH:mm",
     },
-    {
-      "key": "jcr:createdBy",
-      "label": "Created by",
-      "format": "string",
-    },
   ]
 
   return (
-    <Grid container className={classes.dashboardContainer}>
-      <Grid className={classes.dashboardEntry} size={12}>
-        <FormView
-          expanded
-          columns={columns || defaultColumns}
-          questionnaire={questionnaire}
-          extensionURL={extensionURL}
-          actionSwitches={actionSwitches}
-        />
-      </Grid>
-    </Grid>
+    <DefaultForms
+      actionSwitches={actionSwitches}
+      columns={columns}
+      {...props}
+    />
   );
 }
 
-export default withStyles(Forms, questionnaireStyle);
+export default Forms;
