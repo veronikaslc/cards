@@ -34,6 +34,7 @@ import { AdapterLuxon } from "@mui/x-date-pickers/AdapterLuxon";
 import { LocalizationProvider } from '@mui/x-date-pickers';
 import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import { DateTime } from "luxon";
 
 // Component that renders a date/time question
 // Selected answers are placed in a series of <input type="hidden"> tags for submission.
@@ -71,6 +72,12 @@ function DateQuestion(props) {
     lowerLimit,
     upperLimit
   } = {...props.questionDefinition, ...props};
+
+  let defaultValue = props.questionDefinition.defaultValue;
+  let dateObj = DateTime.fromISO(defaultValue);
+  if (!dateObj.isValid) {
+    defaultValue = null;
+  }
 
   const existingValues = existingAnswer && existingAnswer[1].value || "";
   const upperLimitLuxon = DateTimeUtilities.toPrecision(DateTimeUtilities.processRelativeDate(upperLimit));
