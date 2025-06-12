@@ -18,22 +18,23 @@ package io.uhndata.cards.patients.internal;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.List;
 import java.util.Map;
 
 import javax.jcr.Node;
 import javax.jcr.RepositoryException;
 import javax.jcr.Session;
 
-import org.apache.jackrabbit.oak.api.CommitFailedException;
-import org.apache.jackrabbit.oak.api.PropertyState;
-import org.apache.jackrabbit.oak.plugins.memory.MemoryNodeBuilder;
-import org.apache.jackrabbit.oak.spi.commit.DefaultEditor;
 import org.apache.jackrabbit.oak.spi.commit.Editor;
-import org.apache.jackrabbit.oak.spi.state.NodeBuilder;
-import org.apache.jackrabbit.oak.spi.state.NodeState;
 import org.apache.sling.api.resource.LoginException;
 import org.apache.sling.api.resource.ResourceResolver;
 import org.apache.sling.api.resource.ResourceResolverFactory;
+import org.apache.sling.api.resource.observation.ResourceChange;
+import org.apache.sling.api.resource.observation.ResourceChangeListener;
+import org.osgi.service.component.annotations.FieldOption;
+import org.osgi.service.component.annotations.Reference;
+import org.osgi.service.component.annotations.ReferenceCardinality;
+import org.osgi.service.component.annotations.ReferencePolicyOption;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -46,71 +47,51 @@ import io.uhndata.cards.resolverProvider.ThreadResourceResolverProvider;
  *
  * @version $Id$
  */
-public class SurveyFirstOpenedEditor extends DefaultEditor
+public class SurveyFirstOpenedListener implements ResourceChangeListener
 {
-    private static final Logger LOGGER = LoggerFactory.getLogger(SurveyFirstOpenedEditor.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(SurveyFirstOpenedListener.class);
 
     private static final String OPENED_PROP = "survey_opened";
 
-    private final NodeBuilder currentNodeBuilder;
+    @Reference(fieldOption = FieldOption.REPLACE, cardinality = ReferenceCardinality.OPTIONAL,
+        policyOption = ReferencePolicyOption.GREEDY)
+    private ResourceResolverFactory rrf;
 
-    private final ResourceResolverFactory rrf;
+    @Reference
+    private ThreadResourceResolverProvider rrp;
 
-    private final ThreadResourceResolverProvider rrp;
+    @Reference
+    private QuestionnaireUtils questionnaireUtils;
 
-    private final QuestionnaireUtils questionnaireUtils;
-
-    private final FormUtils formUtils;
-
-    /**
-     * Simple constructor.
-     *
-     * @param nodeBuilder the builder for the current node
-     * @param rrf the resource resolver factory which can provide access to JCR sessions
-     * @param rrp the thread resource resolver provider to store resource resolvers to
-     * @param questionnaireUtils for working with questionnaire data
-     * @param formUtils for working with form data
-     */
-    public SurveyFirstOpenedEditor(NodeBuilder nodeBuilder, ThreadResourceResolverProvider rrp,
-        ResourceResolverFactory rrf, QuestionnaireUtils questionnaireUtils, FormUtils formUtils)
-    {
-        this.currentNodeBuilder = nodeBuilder;
-        this.rrp = rrp;
-        this.rrf = rrf;
-        this.formUtils = formUtils;
-        this.questionnaireUtils = questionnaireUtils;
-    }
+    @Reference
+    private FormUtils formUtils;
 
     @Override
-    public Editor childNodeChanged(final String name, final NodeState before, final NodeState after)
-    {
-        return new SurveyFirstOpenedEditor(this.currentNodeBuilder.getChildNode(name), this.rrp, this.rrf,
-            this.questionnaireUtils, this.formUtils);
+    public void onChange(List<ResourceChange> changes) {
+        changes.forEach(this::handleEvent);
     }
 
-    // Called when the value of an existing property gets changed
-    @Override
-    public void propertyChanged(PropertyState before, PropertyState after) throws CommitFailedException
+    void handleEvent(ResourceChange change)
     {
         // Check that if the property was changed by user
-        final Session thisSession = this.rrp.getThreadResourceResolver().adaptTo(Session.class);
-        final String userID = thisSession.getUserID();
+        final String userID = change.getUserId();
         final Boolean isUser = "patient".equals(userID) || "guest-patient".equals(userID);
         if (!isUser) {
             return;
         }
 
-        // TODO check if the form is part of the survey events questionnaire set
-        Node node = getCurrentNode(thisSession);
-        if (!this.formUtils.isForm(node)) {
-            return;
-        }
 
         boolean mustPopResolver = false;
         try (ResourceResolver localResolver = this.rrf
             .getServiceResourceResolver(Map.of(ResourceResolverFactory.SUBSERVICE, "SurveyFirstOpenedEditor"))) {
             this.rrp.push(localResolver);
             mustPopResolver = true;
+
+            // TODO check if the form is part of the survey events questionnaire set
+            Node node = getCurrentNode(localResolver.adaptTo(Session.class), change.getPath());
+            if (!this.formUtils.isForm(node)) {
+                return;
+            }
 
             final Session session = localResolver.adaptTo(Session.class);
             //TODO change next line to get surveyForm via *new* method
@@ -177,14 +158,11 @@ public class SurveyFirstOpenedEditor extends DefaultEditor
         }
     }
 
-    private Node getCurrentNode(final Session session)
+    private Node getCurrentNode(final Session session, String nodePath)
     {
         try {
-            if (this.currentNodeBuilder instanceof MemoryNodeBuilder) {
-                final String nodePath = ((MemoryNodeBuilder) this.currentNodeBuilder).getPath();
-                if (session.nodeExists(nodePath)) {
-                    return session.getNode(nodePath);
-                }
+            if (session.nodeExists(nodePath)) {
+                return session.getNode(nodePath);
             }
         } catch (RepositoryException e) {
             // just return null
