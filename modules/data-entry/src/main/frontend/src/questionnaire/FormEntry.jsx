@@ -345,8 +345,8 @@ export default function FormEntry(props) {
   }
 
   return (
-    <React.Fragment>
+    <>
       {displayedComponent}
-    </React.Fragment>
+    </>
   )
 }
