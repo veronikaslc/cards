@@ -68,6 +68,7 @@ public class SubjectTypeInstanceCountProcessorTest
     private static final String NAME = "instanceCount";
     private static final int PRIORITY = 55;
     private static final boolean ENABLED = true;
+    private static final boolean NOTENABLED = false;
 
     @Rule
     public SlingContext context = new SlingContext(ResourceResolverType.JCR_OAK);
@@ -91,9 +92,9 @@ public class SubjectTypeInstanceCountProcessorTest
     }
 
     @Test
-    public void isEnabledByDefaultReturnsTrue()
+    public void isEnabledByDefaultReturnsFalse()
     {
-        assertEquals(ENABLED, this.subjectTypeInstanceCountProcessor.isEnabledByDefault(mock(Resource.class)));
+        assertEquals(NOTENABLED, this.subjectTypeInstanceCountProcessor.isEnabledByDefault(mock(Resource.class)));
     }
 
     @Test

@@ -16,7 +16,6 @@
  */
 package io.uhndata.cards.subjects.internal;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.jcr.Node;
@@ -27,7 +26,6 @@ import javax.json.Json;
 import javax.json.JsonObject;
 import javax.json.JsonValue;
 
-import io.uhndata.cards.spi.QuickSearchEngine;
 import org.apache.sling.api.resource.Resource;
 import org.apache.sling.api.resource.ResourceResolver;
 import org.apache.sling.testing.mock.sling.ResourceResolverType;
@@ -39,6 +37,7 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.runners.MockitoJUnitRunner;
 
+import io.uhndata.cards.spi.QuickSearchEngine;
 import io.uhndata.cards.spi.SearchParameters;
 import io.uhndata.cards.spi.SearchParametersFactory;
 
