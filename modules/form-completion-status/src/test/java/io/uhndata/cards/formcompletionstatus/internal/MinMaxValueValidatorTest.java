@@ -82,7 +82,7 @@ public class MinMaxValueValidatorTest
         NodeBuilder answerInSectionNodeBuilder = createTestAnswer(answerInSectionUuid, question.getIdentifier());
 
         Map<String, Boolean> flags = createStatusFlagsMap();
-        this.minMaxValueValidator.validate(answerInSectionNodeBuilder, question, true, flags);
+        this.minMaxValueValidator.validate(answerInSectionNodeBuilder, question, flags);
         assertTrue(flags.containsKey(FLAG_INVALID));
         assertFalse(flags.get(FLAG_INVALID));
     }
@@ -97,7 +97,7 @@ public class MinMaxValueValidatorTest
         answerInSectionNodeBuilder.setProperty(VALUE_PROPERTY, Set.of("100", "200"), Type.STRINGS);
 
         Map<String, Boolean> flags = createStatusFlagsMap();
-        this.minMaxValueValidator.validate(answerInSectionNodeBuilder, question, true, flags);
+        this.minMaxValueValidator.validate(answerInSectionNodeBuilder, question, flags);
         assertFalse(flags.containsKey(FLAG_INVALID));
     }
 
@@ -111,7 +111,7 @@ public class MinMaxValueValidatorTest
         answerInSectionNodeBuilder.setProperty(VALUE_PROPERTY, Set.of("40"), Type.STRINGS);
 
         Map<String, Boolean> flags = createStatusFlagsMap();
-        this.minMaxValueValidator.validate(answerInSectionNodeBuilder, question, true, flags);
+        this.minMaxValueValidator.validate(answerInSectionNodeBuilder, question, flags);
         assertTrue(flags.containsKey(FLAG_INVALID));
         assertTrue(flags.get(FLAG_INVALID));
     }
@@ -126,7 +126,7 @@ public class MinMaxValueValidatorTest
         answerInSectionNodeBuilder.setProperty(VALUE_PROPERTY, Set.of("3000"), Type.STRINGS);
 
         Map<String, Boolean> flags = createStatusFlagsMap();
-        this.minMaxValueValidator.validate(answerInSectionNodeBuilder, question, true, flags);
+        this.minMaxValueValidator.validate(answerInSectionNodeBuilder, question, flags);
         assertTrue(flags.containsKey(FLAG_INVALID));
         assertTrue(flags.get(FLAG_INVALID));
     }
@@ -140,7 +140,7 @@ public class MinMaxValueValidatorTest
         NodeBuilder answerInSectionNodeBuilder = createTestAnswer(answerInSectionUuid, UUID.randomUUID().toString());
 
         Assertions.assertThatCode(
-                () -> this.minMaxValueValidator.validate(answerInSectionNodeBuilder, question, true, new HashMap<>()))
+                () -> this.minMaxValueValidator.validate(answerInSectionNodeBuilder, question, new HashMap<>()))
                 .doesNotThrowAnyException();
     }
 

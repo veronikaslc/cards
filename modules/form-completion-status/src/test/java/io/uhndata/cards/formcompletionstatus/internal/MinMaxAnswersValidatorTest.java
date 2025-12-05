@@ -83,7 +83,7 @@ public class MinMaxAnswersValidatorTest
         NodeBuilder answerInSectionNodeBuilder = createTestAnswer(answerInSectionUuid, question.getIdentifier());
 
         Map<String, Boolean> flags = createStatusFlagsMap();
-        this.minMaxAnswersValidator.validate(answerInSectionNodeBuilder, question, true, flags);
+        this.minMaxAnswersValidator.validate(answerInSectionNodeBuilder, question, flags);
         assertTrue(flags.containsKey(FLAG_INCOMPLETE));
         assertTrue(flags.get(FLAG_INCOMPLETE));
         assertFalse(flags.containsKey(FLAG_INVALID));
@@ -99,7 +99,7 @@ public class MinMaxAnswersValidatorTest
         answerInSectionNodeBuilder.setProperty(VALUE_PROPERTY, Set.of("100", "200", "300"), Type.STRINGS);
 
         Map<String, Boolean> flags = createStatusFlagsMap();
-        this.minMaxAnswersValidator.validate(answerInSectionNodeBuilder, question, true, flags);
+        this.minMaxAnswersValidator.validate(answerInSectionNodeBuilder, question, flags);
         assertFalse(flags.containsKey(FLAG_INCOMPLETE));
         assertTrue(flags.containsKey(FLAG_INVALID));
         assertTrue(flags.get(FLAG_INVALID));
@@ -114,7 +114,7 @@ public class MinMaxAnswersValidatorTest
         NodeBuilder answerInSectionNodeBuilder = createTestAnswer(answerInSectionUuid, UUID.randomUUID().toString());
 
         Assertions.assertThatCode(
-                () -> this.minMaxAnswersValidator.validate(answerInSectionNodeBuilder, question, true, new HashMap<>()))
+                () -> this.minMaxAnswersValidator.validate(answerInSectionNodeBuilder, question, new HashMap<>()))
                 .doesNotThrowAnyException();
     }
 

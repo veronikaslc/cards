@@ -41,8 +41,7 @@ public class DateRangeMinMaxAnswersValidator extends MinMaxAnswersValidator impl
     }
 
     @Override
-    public void validate(final NodeBuilder answer, final Node question, final boolean initialAnswer,
-        final Map<String, Boolean> flags)
+    public void validate(final NodeBuilder answer, final Node question, final Map<String, Boolean> flags)
     {
         try {
             // This only checks the number of values for date range answers

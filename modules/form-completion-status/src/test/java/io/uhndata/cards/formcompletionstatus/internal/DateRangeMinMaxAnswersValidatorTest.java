@@ -84,7 +84,7 @@ public class DateRangeMinMaxAnswersValidatorTest
         answerInSectionNodeBuilder.setProperty(VALUE_PROPERTY, Set.of("2023-01-01"), Type.STRINGS);
 
         Map<String, Boolean> flags = createStatusFlagsMap();
-        this.dateRangeMinMaxAnswersValidator.validate(answerInSectionNodeBuilder, question, true, flags);
+        this.dateRangeMinMaxAnswersValidator.validate(answerInSectionNodeBuilder, question, flags);
         assertTrue(flags.containsKey(FLAG_INCOMPLETE));
         assertTrue(flags.get(FLAG_INCOMPLETE));
         assertFalse(flags.containsKey(FLAG_INVALID));
@@ -100,7 +100,7 @@ public class DateRangeMinMaxAnswersValidatorTest
         answerInSectionNodeBuilder.setProperty(VALUE_PROPERTY, Set.of("2023-01-01", "2023-02-01"), Type.STRINGS);
 
         Map<String, Boolean> flags = createStatusFlagsMap();
-        this.dateRangeMinMaxAnswersValidator.validate(answerInSectionNodeBuilder, question, true, flags);
+        this.dateRangeMinMaxAnswersValidator.validate(answerInSectionNodeBuilder, question, flags);
         assertFalse(flags.containsKey(FLAG_INCOMPLETE));
         assertFalse(flags.containsKey(FLAG_INVALID));
     }
@@ -114,7 +114,7 @@ public class DateRangeMinMaxAnswersValidatorTest
         NodeBuilder answerInSectionNodeBuilder = createTestAnswer(answerInSectionUuid, UUID.randomUUID().toString());
 
         Assertions.assertThatCode(
-                () -> this.dateRangeMinMaxAnswersValidator.validate(answerInSectionNodeBuilder, question, true,
+                () -> this.dateRangeMinMaxAnswersValidator.validate(answerInSectionNodeBuilder, question,
                         new HashMap<>())).doesNotThrowAnyException();
     }
 
@@ -127,7 +127,7 @@ public class DateRangeMinMaxAnswersValidatorTest
         NodeBuilder answerInSectionNodeBuilder = createTestAnswer(answerInSectionUuid, question.getIdentifier());
 
         Map<String, Boolean> flags = createStatusFlagsMap();
-        this.dateRangeMinMaxAnswersValidator.validate(answerInSectionNodeBuilder, question, true, flags);
+        this.dateRangeMinMaxAnswersValidator.validate(answerInSectionNodeBuilder, question, flags);
         assertTrue(flags.containsKey(FLAG_INCOMPLETE));
         assertFalse(flags.get(FLAG_INCOMPLETE));
         assertTrue(flags.containsKey(FLAG_INVALID));

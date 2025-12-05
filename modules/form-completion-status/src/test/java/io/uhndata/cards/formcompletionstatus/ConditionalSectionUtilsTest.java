@@ -589,7 +589,7 @@ public class ConditionalSectionUtilsTest
     private NodeBuilder getFormNodeBuilderWithAnswerAndAnswerSectionChildren(Object answerValue)
             throws RepositoryException
     {
-        // create referencable answer
+        // create referenceable answer
         String questionUuid = this.session.getNode(TEST_QUESTION_PATH).getIdentifier();
         NodeBuilder answerNodeBuilder = createTestAnswer(questionUuid);
         answerNodeBuilder.setProperty(VALUE_PROPERTY, answerValue);
