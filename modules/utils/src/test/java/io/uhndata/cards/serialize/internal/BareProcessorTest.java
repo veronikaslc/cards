@@ -69,7 +69,7 @@ public class BareProcessorTest
     private static final String RESOURCE_TYPE = "sling:resourceType";
     private static final String SUBJECT_TYPE = "cards:Subject";
     private static final String FORM_TYPE = "cards:Form";
-    private static final String ANSWER_TYPE = "cards:Answer";
+    private static final String ANSWER_TYPE = "cards:TextAnswer";
     private static final String TYPE_PROPERTY = "type";
     private static final String QUESTIONNAIRE_PROPERTY = "questionnaire";
     private static final String QUESTION_PROPERTY = "question";

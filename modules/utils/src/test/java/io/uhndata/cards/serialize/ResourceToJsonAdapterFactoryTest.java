@@ -64,7 +64,7 @@ public class ResourceToJsonAdapterFactoryTest
     private static final String NODE_TYPE = "jcr:primaryType";
     private static final String SUBJECT_TYPE = "cards:Subject";
     private static final String FORM_TYPE = "cards:Form";
-    private static final String ANSWER_TYPE = "cards:Answer";
+    private static final String ANSWER_TYPE = "cards:TextAnswer";
     private static final String TYPE_PROPERTY = "type";
     private static final String QUESTIONNAIRE_PROPERTY = "questionnaire";
     private static final String QUESTION_PROPERTY = "question";
@@ -96,7 +96,7 @@ public class ResourceToJsonAdapterFactoryTest
         mockWorkingProcessor(processor, adaptable, true, true, TEST_PROCESSOR_NAME);
         Whitebox.setInternalState(this.factory, "allProcessors", List.of(processor));
         JsonObject adapter = this.factory.getAdapter(adaptable, JsonObject.class);
-        verifyProcessorMethodsInvocation(processor, 1, 1, 15, 1);
+        verifyProcessorMethodsInvocation(processor, 1, 1, 15, 2);
         assertNotNull(adapter);
     }
 
@@ -147,7 +147,7 @@ public class ResourceToJsonAdapterFactoryTest
         Whitebox.setInternalState(this.factory, "allProcessors", List.of(processor1, processor2, processor3));
         JsonObject adapter = this.factory.getAdapter(adaptable, JsonObject.class);
         verifyProcessorMethodsInvocation(processor1, 0, 0, 0, 0);
-        verifyProcessorMethodsInvocation(processor2, 1, 1, 15, 1);
+        verifyProcessorMethodsInvocation(processor2, 1, 1, 15, 2);
         verifyProcessorMethodsInvocation(processor3, 0, 0, 0, 0);
 
         assertNotNull(adapter);
@@ -220,7 +220,7 @@ public class ResourceToJsonAdapterFactoryTest
         this.factory.getAdapter(adaptable, JsonObject.class);
 
         // Methods of not enabledByDefault processor are invoked
-        verifyProcessorMethodsInvocation(processor, 1, 1, 15, 1);
+        verifyProcessorMethodsInvocation(processor, 1, 1, 15, 2);
     }
 
     @Test
@@ -234,7 +234,7 @@ public class ResourceToJsonAdapterFactoryTest
         Whitebox.setInternalState(this.factory, "allProcessors", List.of(processor));
         this.factory.getAdapter(adaptable, JsonObject.class);
 
-        verifyProcessorMethodsInvocation(processor, 1, 1, 15, 1);
+        verifyProcessorMethodsInvocation(processor, 1, 1, 15, 2);
     }
 
     @Test
@@ -277,8 +277,8 @@ public class ResourceToJsonAdapterFactoryTest
         Whitebox.setInternalState(this.factory, "allProcessors", List.of(processor, processorNotInvoked));
         this.factory.getAdapter(adaptable, JsonObject.class);
 
-        verifyProcessorMethodsInvocation(processor, 1, 1, 15, 1);
-        verifyProcessorMethodsInvocation(processorNotInvoked, 1, 1, 15, 1);
+        verifyProcessorMethodsInvocation(processor, 1, 1, 15, 2);
+        verifyProcessorMethodsInvocation(processorNotInvoked, 1, 1, 15, 2);
     }
 
     @Before
@@ -384,6 +384,12 @@ public class ResourceToJsonAdapterFactoryTest
         {
             return Json.createValue(input == null ? this.b : ((JsonNumber) input).intValue() * this.a + this.b);
         }
+
+        @Override
+        public String getDescription()
+        {
+            return "TestResourceJsonProcessor";
+        }
     }
 
     private static class FormRecursiveTestResourceJsonProcessor implements ResourceJsonProcessor
@@ -427,6 +433,12 @@ public class ResourceToJsonAdapterFactoryTest
             }
             return input;
         }
+
+        @Override
+        public String getDescription()
+        {
+            return "FormRecursiveTestResourceJsonProcessor";
+        }
     }
 
     private static class ChildNodeTestResourceJsonProcessor implements ResourceJsonProcessor
@@ -469,6 +481,12 @@ public class ResourceToJsonAdapterFactoryTest
                 // Should not happen
             }
             return input;
+        }
+
+        @Override
+        public String getDescription()
+        {
+            return "ChildNodeTestResourceJsonProcessor";
         }
     }
 

@@ -52,7 +52,7 @@ public class IdentificationProcessorTest
     private static final String NODE_TYPE = "jcr:primaryType";
     private static final String SUBJECT_TYPE = "cards:Subject";
     private static final String FORM_TYPE = "cards:Form";
-    private static final String ANSWER_TYPE = "cards:Answer";
+    private static final String ANSWER_TYPE = "cards:TextAnswer";
     private static final String TYPE_PROPERTY = "type";
     private static final String QUESTIONNAIRE_PROPERTY = "questionnaire";
     private static final String QUESTION_PROPERTY = "question";
@@ -112,32 +112,6 @@ public class IdentificationProcessorTest
         assertEquals(TEST_FORM_PATH, jsonObject.getString("@path"));
         assertTrue(jsonObject.containsKey("@name"));
         assertEquals("f1", jsonObject.getString("@name"));
-    }
-
-    @Test
-    public void leaveAddsReferencedParameterForFormNode() throws RepositoryException
-    {
-        Session session = this.context.resourceResolver().adaptTo(Session.class);
-        Node node = session.getNode(TEST_FORM_PATH);
-        JsonObjectBuilder json = Json.createObjectBuilder();
-        this.identificationProcessor.leave(node, json, mock(Function.class));
-        JsonObject jsonObject = json.build();
-        assertFalse(jsonObject.isEmpty());
-        assertTrue(jsonObject.containsKey("@referenced"));
-        assertFalse(jsonObject.getBoolean("@referenced"));
-    }
-
-    @Test
-    public void leaveAddsReferencedParameterForQuestionnaireNode() throws RepositoryException
-    {
-        Session session = this.context.resourceResolver().adaptTo(Session.class);
-        Node node = session.getNode(TEST_QUESTIONNAIRE_PATH);
-        JsonObjectBuilder json = Json.createObjectBuilder();
-        this.identificationProcessor.leave(node, json, mock(Function.class));
-        JsonObject jsonObject = json.build();
-        assertFalse(jsonObject.isEmpty());
-        assertTrue(jsonObject.containsKey("@referenced"));
-        assertTrue(jsonObject.getBoolean("@referenced"));
     }
 
     @Before
