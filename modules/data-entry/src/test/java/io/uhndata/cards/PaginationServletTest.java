@@ -67,7 +67,7 @@ public class PaginationServletTest
 {
     private static final String NODE_TYPE = "jcr:primaryType";
     private static final String SUBJECT_TYPE = "cards:Subject";
-    private static final String CREATED_DATE_TYPE = "cards:CreatedDate";
+    private static final String CREATED_DATE_TYPE = "cards:Created";
     private static final String QUESTIONNAIRE_TYPE = "cards:Questionnaire";
     private static final String FORM_TYPE = "cards:Form";
     private static final String LONG_ANSWER_TYPE = "cards:LongAnswer";
@@ -173,7 +173,7 @@ public class PaginationServletTest
                 FILTER_VALUES_PARAMETER, "100",
                 FILTER_COMPARATORS_PARAMETER, "=",
                 FILTER_TYPES_PARAMETER, "",
-                FILTER_NODE_TYPES_PARAMETER, "cards:Answer",
+                FILTER_NODE_TYPES_PARAMETER, "cards:TextAnswer",
                 REQUIRED_PARAMETER, "2"
         ));
         MockSlingHttpServletResponse response = new MockSlingHttpServletResponse();
@@ -202,7 +202,7 @@ public class PaginationServletTest
                 FILTER_VALUES_PARAMETER, "100",
                 FILTER_COMPARATORS_PARAMETER, "=",
                 FILTER_TYPES_PARAMETER, "",
-                FILTER_NODE_TYPES_PARAMETER, "cards:Answer",
+                FILTER_NODE_TYPES_PARAMETER, "cards:TextAnswer",
                 REQUIRED_PARAMETER, "2"
         ));
 
@@ -228,7 +228,7 @@ public class PaginationServletTest
                 FILTER_VALUES_PARAMETER, "12345",
                 FILTER_COMPARATORS_PARAMETER, "contains",
                 FILTER_TYPES_PARAMETER, "text",
-                FILTER_NODE_TYPES_PARAMETER, "cards:Answer",
+                FILTER_NODE_TYPES_PARAMETER, "cards:TextAnswer",
                 REQUIRED_PARAMETER, "2"
         ));
         MockSlingHttpServletResponse response = new MockSlingHttpServletResponse();
@@ -257,7 +257,7 @@ public class PaginationServletTest
                 FILTER_VALUES_PARAMETER, "text",
                 FILTER_COMPARATORS_PARAMETER, "notes contain",
                 FILTER_TYPES_PARAMETER, "text",
-                FILTER_NODE_TYPES_PARAMETER, "cards:Answer",
+                FILTER_NODE_TYPES_PARAMETER, "cards:TextAnswer",
                 REQUIRED_PARAMETER, "2"
         ));
         MockSlingHttpServletResponse response = new MockSlingHttpServletResponse();
@@ -286,7 +286,7 @@ public class PaginationServletTest
                 FILTER_VALUES_PARAMETER, "12345",
                 FILTER_COMPARATORS_PARAMETER, "=",
                 FILTER_TYPES_PARAMETER, "text",
-                FILTER_NODE_TYPES_PARAMETER, "cards:Answer",
+                FILTER_NODE_TYPES_PARAMETER, "cards:TextAnswer",
                 REQUIRED_PARAMETER, "2"
         ));
         MockSlingHttpServletResponse response = new MockSlingHttpServletResponse();
@@ -703,7 +703,7 @@ public class PaginationServletTest
                 FILTER_NAMES_PARAMETER, CREATED_DATE_TYPE,
                 FILTER_VALUES_PARAMETER, getFormattedCurrentDateTime(),
                 FILTER_COMPARATORS_PARAMETER, comparator,
-                FILTER_TYPES_PARAMETER, "createddate"
+                FILTER_TYPES_PARAMETER, "datetime"
         );
     }
 

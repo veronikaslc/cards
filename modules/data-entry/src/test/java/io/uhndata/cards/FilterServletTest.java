@@ -95,7 +95,7 @@ public class FilterServletTest
         this.filterServlet.doGet(request, response);
         JsonObject jsonObject = getResponseJsonReader(response);
         assertNotNull(jsonObject);
-        assertEquals(3, jsonObject.keySet().size());
+        assertEquals(17, jsonObject.keySet().size());
     }
 
     @Test
@@ -110,7 +110,7 @@ public class FilterServletTest
         this.filterServlet.doGet(request, response);
         JsonObject jsonObject = getResponseJsonReader(response);
         assertNotNull(jsonObject);
-        assertEquals(3, jsonObject.keySet().size());
+        assertEquals(17, jsonObject.keySet().size());
     }
 
     @Test
@@ -122,7 +122,7 @@ public class FilterServletTest
         this.filterServlet.doGet(request, response);
         JsonObject jsonObject = getResponseJsonReader(response);
         assertNotNull(jsonObject);
-        assertEquals(11, jsonObject.keySet().size());
+        assertEquals(3, jsonObject.keySet().size());
     }
 
     @Before

@@ -253,7 +253,7 @@ public class CountServletTest
                         "subject", subject,
                         QUESTIONNAIRE_PROPERTY, questionnaire)
                 .resource(TEST_FORM_PATH + "/a1",
-                        NODE_TYPE, "cards:Answer",
+                        NODE_TYPE, "cards:TextAnswer",
                         "question", question)
                 .commit();
 
