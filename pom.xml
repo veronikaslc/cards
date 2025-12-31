@@ -311,7 +311,7 @@
       <plugin>
         <artifactId>maven-compiler-plugin</artifactId>
         <configuration>
-          <compilerArgument>-Xlint:all</compilerArgument>
+          <compilerArgument>-Xlint:all,-serial</compilerArgument>
           <showWarnings>true</showWarnings>
           <showDeprecation>true</showDeprecation>
           <failOnWarning>true</failOnWarning>
@@ -1606,8 +1606,8 @@
           <version>3.14.1</version>
           <!-- Java 11 is required -->
           <configuration>
-            <source>11</source>
-            <target>11</target>
+            <source>21</source>
+            <target>21</target>
           </configuration>
         </plugin>
         <!-- Compile the React code -->
