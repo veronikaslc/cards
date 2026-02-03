@@ -133,7 +133,7 @@ let QuestionnaireItemCard = (props) => {
     if (itemRef.current) {
       itemRef.current.setAttribute('in-view-data-id', data['jcr:uuid']);
     }
-  }, [data['jcr:uuid']]);
+  }, [data]);
 
   // If autofocus is needed and specified in the url
   // create a ref to store the question container DOM element
@@ -180,7 +180,7 @@ let QuestionnaireItemCard = (props) => {
         .indexOf(itemId)
       : null;
     return itemPosition !== null ? getOrdinalString(itemPosition) : null;
-  }, [type, treeContext?.state?.nodes, data['jcr:uuid']]);
+  }, [type, treeContext?.state?.nodes, data]);
 
   return (
     <div
