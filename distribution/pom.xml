@@ -54,6 +54,7 @@
               <filesInclude>*.json</filesInclude>
               <filesInclude>oak/*.json</filesInclude>
               <filesInclude>oak/persistence/oak_persistence_mongods.json</filesInclude>
+              <filesInclude>oak/persistence/maintenance.json</filesInclude>
               <filesInclude>core/*.json</filesInclude>
               <title>CARDS With Oak Document NS Mongo Persistence</title>
             </aggregate>

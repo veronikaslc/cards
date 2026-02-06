@@ -1,0 +1,13 @@
+{
+    "prototype": {
+        "id": "org.apache.sling:org.apache.sling.jcr.maintenance:slingosgifeature:base:1.0.2"
+    },
+    "configurations": {
+        "org.apache.sling.jcr.maintenance.internal.DataStoreCleanupScheduler": {
+            "scheduler.expression": "0 0 23 ? * *"
+        },
+        "org.apache.sling.jcr.maintenance.internal.RevisionCleanupScheduler": {
+            "scheduler.expression": "0 0 23 ? * *"
+        }
+    }
+}
