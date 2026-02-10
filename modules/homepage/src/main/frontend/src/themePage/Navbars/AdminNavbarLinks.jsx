@@ -108,7 +108,10 @@ function HeaderLinks (props) {
       </MenuItem>
     }
     {/* Use an onClick instead of a Link to remove the unremovable underline styling */}
-    <MenuItem onClick={() => window.location.href = "/system/sling/logout"} className={expand ? "" : classes.itemLink}>
+    <MenuItem
+      onClick={() => window.location.href = "/system/sling/logout"}
+      className={expand ? "" : classes.itemLink}
+      data-testid="admin-signout">
       <ExpandableIcon>
         <ExitToAppIcon className={expand ? "" : classNames(classes.itemIcon, classes.whiteFont)}/>
       </ExpandableIcon>
@@ -138,6 +141,7 @@ function HeaderLinks (props) {
             onClick={() => setPopperOpen((open) => !open)}
             ref={avatarRef}
             size="large"
+            data-testid="admin-avatar"
           >
             <Avatar className={classes[color]}>{initials}</Avatar>
           </IconButton>
