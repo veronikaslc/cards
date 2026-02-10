@@ -71,3 +71,9 @@ samlKeystore.p12
 /Utilities/FormImport/*.csv
 /Utilities/FormImport/*.json
 /Utilities/FormImport/*.xml
+
+# Playwright
+test-results/
+playwright-report/
+playwright/.cache/
+blob-report/
