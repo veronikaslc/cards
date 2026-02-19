@@ -163,7 +163,7 @@ function UnstyledNewSubjectDialog (props) {
 
   return(
     <>
-      <ResponsiveDialog title="Create new subject" open={open} onClose={onClose}>
+      <ResponsiveDialog title="Create new subject" open={open} onClose={onClose} data-testid="new-subject-dialog">
         <DialogContent dividers className={classes.dialogContentWithTable}>
           { error && <Alert severity="error">{error}</Alert>}
           <div className={classes.newSubjectInput}>
@@ -177,6 +177,7 @@ function UnstyledNewSubjectDialog (props) {
               onChange={(event) => { onChangeSubject(event); validateSubjectId(newSubjectType, event?.target?.value); }}
               error={!isValid}
               helperText={newSubjectType?.["idPatternHint"] || ""}
+              data-testid="new-subject-identifier-input"
             />
           </div>
           <MaterialReactTable
@@ -235,6 +236,7 @@ function UnstyledNewSubjectDialog (props) {
             onClick={() => {setNewSubjectType(""); onSubmit()}}
             variant="contained"
             disabled={disabled || continueDisabled || !isValid}
+            data-testid="new-subject-create-button"
           >
             {requiresParents ? "Continue" : "Create"}
           </Button>

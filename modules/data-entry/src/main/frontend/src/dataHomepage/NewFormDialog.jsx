@@ -431,6 +431,7 @@ function NewFormDialog(props) {
           closeAllDialogs();
           onClose?.();
         }}
+        data-testid="new-form-dialog"
       >
         <DialogContent dividers className={classes.dialogContentWithTable}>
           {error && (!newSubjectPopperOpen) && <Alert severity="error">{error}</Alert>}
@@ -476,6 +477,7 @@ function NewFormDialog(props) {
               color="success"
               onClick={() => { setNewSubjectPopperOpen(true); setError(); }}
               className={classes.createNewSubjectButton}
+              data-testid="new-form-new-subject-button"
             >
               New subject
             </Button>
@@ -493,6 +495,7 @@ function NewFormDialog(props) {
           <Button
             variant="contained"
             onClick={progressThroughDialog}
+            data-testid="new-form-continue-button"
           >
             { progress == PROGRESS_SELECT_QUESTIONNAIRE ?
               "Continue"
