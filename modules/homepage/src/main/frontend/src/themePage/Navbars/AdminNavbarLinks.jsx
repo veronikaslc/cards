@@ -111,7 +111,7 @@ function HeaderLinks (props) {
     <MenuItem
       onClick={() => window.location.href = "/system/sling/logout"}
       className={expand ? "" : classes.itemLink}
-      data-testid="admin-signout">
+      aria-label="admin-signout">
       <ExpandableIcon>
         <ExitToAppIcon className={expand ? "" : classNames(classes.itemIcon, classes.whiteFont)}/>
       </ExpandableIcon>
@@ -141,7 +141,7 @@ function HeaderLinks (props) {
             onClick={() => setPopperOpen((open) => !open)}
             ref={avatarRef}
             size="large"
-            data-testid="admin-avatar"
+            aria-label="admin-avatar"
           >
             <Avatar className={classes[color]}>{initials}</Avatar>
           </IconButton>
