@@ -42,6 +42,22 @@ CARDS (Clinical ARchive for Data Science) is a medical data collection platform 
 - Default credentials: `admin` / `admin`
 - The startup script uses Python and `psutil` for TCP bind checks; without `psutil` it falls back to a less robust check
 
+### Frontend architecture
+
+The React frontend is **not authored inside `aggregated-frontend/`**. That directory is **generated code** — never edit files there directly. Instead, individual modules under `modules/` contain the source React components. During build, a Python aggregation script collects these into `aggregated-frontend/src/main/frontend/`, which is then compiled by Webpack.
+
+To modify a UI component: find its source module, edit there, and rebuild (`mvn install -Pquick` or `-PautoInstallBundle` for hot-deploy).
+
+### Agent guidelines
+
+- **Respect module boundaries.** Each OSGi bundle is self-contained; avoid modifying multiple modules unless the change genuinely spans them.
+- **Identify the change surface first.** Determine whether a change is backend (Java/OSGi) or frontend (React in a module) and run the appropriate build/test cycle.
+- **Keep diffs minimal.** Prefer small, focused changes over broad refactors.
+- **Run tests after backend changes.** See the Tests section above.
+- **Rebuild frontend after UI changes.** A backend-only change can skip Webpack with `-Pskip-webpack`.
+- **Do not break OSGi bundle structure.** Preserve `pom.xml` packaging, `bnd` headers, and Sling content paths when editing modules.
+- **When uncertain, prefer the smallest safe change.**
+
 ### Gotchas
 
 - The build requires a `python` command — on Ubuntu where only `python3` exists, create a symlink: `sudo ln -sf /usr/bin/python3 /usr/bin/python`
